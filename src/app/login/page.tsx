@@ -16,6 +16,9 @@ import { authService } from '@/lib/services/authService';
 import { toast } from 'sonner';
 import Link from 'next/link';
 import { Logo } from '@/components/logo';
+import Image from 'next/image';
+import { getPlaceholderImage } from '@/lib/placeholder-images';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 
 const loginSchema = z.object({
   email: z.string().email({ message: 'Invalid email address.' }),
@@ -30,6 +33,7 @@ export default function LoginPage() {
   const { setAuth } = useAuthStore();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const loginImage = getPlaceholderImage('hero-background');
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -55,85 +59,99 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen w-full items-center justify-center bg-background p-4">
-      <div className="w-full max-w-md space-y-6">
-        <div className="text-center">
-          <Logo className="mb-4 inline-flex" />
-          <h1 className="text-3xl font-bold font-headline text-primary">Welcome Back</h1>
-          <p className="text-muted-foreground">Sign in to manage your luxury experience.</p>
-        </div>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input placeholder="name@example.com" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <div className="relative">
-                      <Input
-                        type={showPassword ? 'text' : 'password'}
-                        placeholder="••••••••"
-                        {...field}
-                      />
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        className="absolute right-1 top-1/2 h-7 w-7 -translate-y-1/2 text-muted-foreground"
-                        onClick={() => setShowPassword(!showPassword)}
-                      >
-                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                      </Button>
+    <div className="relative min-h-screen w-full">
+        <Image
+          src={loginImage.imageUrl}
+          alt={loginImage.description}
+          fill
+          className="object-cover"
+          data-ai-hint={loginImage.imageHint}
+        />
+        <div className="absolute inset-0 bg-black/60" />
+        <div className="relative z-10 flex min-h-screen w-full items-center justify-center p-4">
+            <Card className="w-full max-w-md">
+                <CardHeader className="text-center">
+                    <div className="mb-4 inline-flex">
+                        <Logo />
                     </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <div className="flex items-center justify-between">
-              <FormField
-                control={form.control}
-                name="rememberMe"
-                render={({ field }) => (
-                  <FormItem className="flex items-center space-x-2">
-                    <FormControl>
-                      <Checkbox id="rememberMe" checked={field.value} onCheckedChange={field.onChange} />
-                    </FormControl>
-                    <Label htmlFor="rememberMe" className="text-sm font-normal">Remember me</Label>
-                  </FormItem>
-                )}
-              />
-              <Link href="#" className="text-sm text-accent hover:underline">
-                Forgot password?
-              </Link>
-            </div>
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? 'Signing In...' : 'Sign In'}
-            </Button>
-          </form>
-        </Form>
-        <p className="text-center text-sm text-muted-foreground">
-          Don&apos;t have an account?{' '}
-          <Link href="#" className="font-semibold text-accent hover:underline">
-            Sign up
-          </Link>
-        </p>
-      </div>
+                    <h1 className="text-3xl font-bold font-headline text-primary">Welcome Back</h1>
+                    <p className="text-muted-foreground">Sign in to manage your luxury experience.</p>
+                </CardHeader>
+                <CardContent>
+                    <Form {...form}>
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                            <FormField
+                            control={form.control}
+                            name="email"
+                            render={({ field }) => (
+                                <FormItem>
+                                <FormLabel>Email</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="name@example.com" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                                </FormItem>
+                            )}
+                            />
+                            <FormField
+                            control={form.control}
+                            name="password"
+                            render={({ field }) => (
+                                <FormItem>
+                                <FormLabel>Password</FormLabel>
+                                <FormControl>
+                                    <div className="relative">
+                                    <Input
+                                        type={showPassword ? 'text' : 'password'}
+                                        placeholder="••••••••"
+                                        {...field}
+                                    />
+                                    <Button
+                                        type="button"
+                                        variant="ghost"
+                                        size="icon"
+                                        className="absolute right-1 top-1/2 h-7 w-7 -translate-y-1/2 text-muted-foreground"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                    >
+                                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                                    </Button>
+                                    </div>
+                                </FormControl>
+                                <FormMessage />
+                                </FormItem>
+                            )}
+                            />
+                            <div className="flex items-center justify-between">
+                            <FormField
+                                control={form.control}
+                                name="rememberMe"
+                                render={({ field }) => (
+                                <FormItem className="flex items-center space-x-2">
+                                    <FormControl>
+                                    <Checkbox id="rememberMe" checked={field.value} onCheckedChange={field.onChange} />
+                                    </FormControl>
+                                    <Label htmlFor="rememberMe" className="text-sm font-normal">Remember me</Label>
+                                </FormItem>
+                                )}
+                            />
+                            <Link href="#" className="text-sm text-accent hover:underline">
+                                Forgot password?
+                            </Link>
+                            </div>
+                            <Button type="submit" className="w-full" disabled={isLoading}>
+                            {isLoading ? 'Signing In...' : 'Sign In'}
+                            </Button>
+                        </form>
+                    </Form>
+                    <p className="mt-6 text-center text-sm text-muted-foreground">
+                        Don&apos;t have an account?{' '}
+                        <Link href="#" className="font-semibold text-accent hover:underline">
+                            Sign up
+                        </Link>
+                    </p>
+                </CardContent>
+            </Card>
+        </div>
     </div>
   );
 }
