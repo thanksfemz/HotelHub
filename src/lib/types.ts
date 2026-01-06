@@ -31,3 +31,15 @@ export type RevenueData = {
   date: string;
   revenue: number;
 };
+
+export type BookingStatus = 'Pending' | 'Confirmed' | 'Checked-in' | 'Checked-out' | 'Cancelled';
+
+export type Booking = {
+  id: string;
+  guestName: string;
+  roomNumber: string;
+  checkIn: string;
+  checkOut: string;
+  status: BookingStatus;
+  amount: number;
+};
