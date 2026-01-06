@@ -2,6 +2,7 @@ import type { LucideIcon } from 'lucide-react';
 import type { ImagePlaceholder } from './placeholder-images';
 
 export type Room = {
+  id: string;
   name: string;
   description: string;
   price: number;

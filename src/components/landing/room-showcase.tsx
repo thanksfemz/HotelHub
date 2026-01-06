@@ -43,7 +43,7 @@ export function RoomShowcase() {
                   <span className="text-sm text-muted-foreground">/night</span>
                 </div>
                 <Button variant="outline" asChild className="border-accent text-accent hover:bg-accent hover:text-accent-foreground transition-colors">
-                  <Link href="/rooms/1">View Details</Link>
+                  <Link href={`/rooms/${room.id}`}>View Details</Link>
                 </Button>
               </CardFooter>
               <div className="h-1 bg-accent" />

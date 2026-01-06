@@ -4,18 +4,21 @@ import { Wifi, SquareParking, UtensilsCrossed, Waves, Dumbbell, Sparkles } from 
 
 export const rooms: Room[] = [
   {
+    id: 'deluxe-king-suite',
     name: 'Deluxe King Suite',
     description: 'A spacious and elegant suite with a stunning city view, perfect for a luxurious getaway.',
     price: 350,
     image: getPlaceholderImage('room-1'),
   },
   {
+    id: 'executive-double-room',
     name: 'Executive Double Room',
     description: 'Comfort and style meet in this well-appointed room, ideal for business and leisure travelers.',
     price: 250,
     image: getPlaceholderImage('room-2'),
   },
   {
+    id: 'classic-single-room',
     name: 'Classic Single Room',
     description: 'A cozy and modern room designed for solo travelers seeking comfort and convenience.',
     price: 180,
