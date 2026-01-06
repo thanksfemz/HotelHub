@@ -11,7 +11,7 @@
     --popover: 43 44% 96%;
     --popover-foreground: 215 69% 13%;
     --primary: 215 69% 13%; /* #0B1F3A - Deep Navy Blue */
-    --primary-foreground: 43 44% 96%; /* #F7F5EF - Soft Ivory */
+    --primary-foreground: 0 0% 100%; /* #F7F5EF - Soft Ivory */
     --secondary: 43 20% 90%;
     --secondary-foreground: 215 69% 13%;
     --muted: 43 20% 90%;
