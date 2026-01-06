@@ -65,14 +65,14 @@ export const testimonials: Testimonial[] = [
     image: getPlaceholderImage('testimonial-1'),
   },
   {
-    quote: 'The attention to detail at Grandeur Suites is simply unparalleled. Every aspect of our stay was perfect. The best hotel I have ever stayed in.',
+    quote: 'The attention to detail at HotelHub is simply unparalleled. Every aspect of our stay was perfect. The best hotel I have ever stayed in.',
     name: 'Alexandra Chen',
     location: 'Singapore',
     rating: 5,
     image: getPlaceholderImage('testimonial-2'),
   },
   {
-    quote: 'As a frequent business traveler, I can confidently say Grandeur Suites sets the standard for luxury and comfort. The staff was incredibly attentive.',
+    quote: 'As a frequent business traveler, I can confidently say HotelHub sets the standard for luxury and comfort. The staff was incredibly attentive.',
     name: 'David Rodriguez',
     location: 'New York, USA',
     rating: 5,

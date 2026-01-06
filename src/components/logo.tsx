@@ -15,7 +15,7 @@ export function Logo({ className }: LogoProps) {
     >
       <Hotel className="h-7 w-7 text-accent" />
       <span className="font-headline text-2xl font-bold tracking-tight">
-        Grandeur Suites
+        HotelHub
       </span>
     </Link>
   );

@@ -13,7 +13,7 @@ export function Testimonials() {
         <div className="mx-auto mb-12 max-w-2xl text-center">
           <h2 className="font-headline text-4xl font-bold text-primary md:text-5xl">Guest Experiences</h2>
           <p className="mt-4 text-lg text-muted-foreground">
-            Hear what our esteemed guests have to say about their stay at Grandeur Suites.
+            Hear what our esteemed guests have to say about their stay at HotelHub.
           </p>
           <div className="mt-6 mx-auto w-24 h-1 bg-accent"></div>
         </div>

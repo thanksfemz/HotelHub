@@ -9,7 +9,7 @@ export function Footer() {
         <div className="space-y-4">
           <Logo className="text-primary-foreground" />
           <p className="max-w-xs text-sm text-primary-foreground/70">
-            Experience an oasis of luxury and comfort at Grandeur Suites, where every stay is a memorable journey.
+            Experience an oasis of luxury and comfort at HotelHub, where every stay is a memorable journey.
           </p>
         </div>
         <div className="space-y-4">
@@ -25,7 +25,7 @@ export function Footer() {
           <h4 className="font-headline text-lg font-semibold tracking-tight">Contact Us</h4>
           <div className="space-y-2 text-sm text-primary-foreground/70">
             <p>123 Luxury Avenue, Metropolis, 12345</p>
-            <p>Email: <a href="mailto:info@grandeursuites.com" className="hover:text-accent hover:underline">info@grandeursuites.com</a></p>
+            <p>Email: <a href="mailto:info@hotelhub.com" className="hover:text-accent hover:underline">info@hotelhub.com</a></p>
             <p>Phone: <a href="tel:+1234567890" className="hover:text-accent hover:underline">+1 (234) 567-890</a></p>
           </div>
           <div className="flex items-center space-x-4 mt-4">
@@ -37,7 +37,7 @@ export function Footer() {
       </div>
       <div className="border-t border-primary-foreground/10 py-6">
         <div className="container mx-auto flex flex-col items-center justify-between px-4 text-sm text-primary-foreground/50 md:flex-row md:px-6">
-          <p>&copy; {new Date().getFullYear()} Grandeur Suites. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} HotelHub. All rights reserved.</p>
           <div className="mt-4 flex gap-4 md:mt-0">
             <Link href="#" className="hover:text-accent hover:underline" prefetch={false}>Privacy Policy</Link>
             <Link href="#" className="hover:text-accent hover:underline" prefetch={false}>Terms of Service</Link>
