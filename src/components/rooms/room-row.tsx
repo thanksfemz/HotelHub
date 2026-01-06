@@ -10,9 +10,11 @@ import { useRouter } from 'next/navigation';
 
 type RoomRowProps = {
   room: Room;
+  onEdit: (room: Room) => void;
+  onDelete: (room: Room) => void;
 };
 
-export function RoomRow({ room }: RoomRowProps) {
+export function RoomRow({ room, onEdit, onDelete }: RoomRowProps) {
   const router = useRouter();
 
   const handleRowClick = () => {
@@ -57,10 +59,10 @@ export function RoomRow({ room }: RoomRowProps) {
       
       <div className="flex items-center gap-2 justify-end">
          <RoomStatusBadge status={room.status} className="sm:hidden" />
-        <Button variant="ghost" size="icon" className="h-8 w-8">
+        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={(e) => {e.stopPropagation(); onEdit(room)}}>
             <Pencil className="h-4 w-4" />
         </Button>
-        <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive">
+        <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive" onClick={(e) => {e.stopPropagation(); onDelete(room)}}>
             <Trash2 className="h-4 w-4" />
         </Button>
       </div>

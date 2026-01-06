@@ -32,6 +32,9 @@ export const rooms: {
   },
 ];
 
+export const allAmenities = ['Wifi', 'TV', 'Air Conditioning', 'Mini-bar', 'Safe', 'Coffee Maker', 'Ocean View', 'Balcony'];
+
+
 export const amenities: Amenity[] = [
   {
     icon: Wifi,
