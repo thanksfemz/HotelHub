@@ -18,13 +18,15 @@ export function middleware(request: NextRequest) {
     '/services',
   ];
 
+  const publicRoutes = ['/login', '/signup'];
+
   const isProtectedRoute = authenticatedRoutes.some(route => pathname.startsWith(route));
 
   if (!token && isProtectedRoute) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
-  if (token && pathname === '/login') {
+  if (token && publicRoutes.includes(pathname)) {
     return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 

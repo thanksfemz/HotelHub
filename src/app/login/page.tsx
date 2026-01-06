@@ -71,7 +71,7 @@ export default function LoginPage() {
         <div className="relative z-10 flex min-h-screen w-full items-center justify-center p-4">
             <Card className="w-full max-w-md">
                 <CardHeader className="text-center">
-                    <div className="mb-4 inline-flex">
+                    <div className="mb-4 flex justify-center">
                         <Logo />
                     </div>
                     <h1 className="text-3xl font-bold font-headline text-primary">Welcome Back</h1>
@@ -145,7 +145,7 @@ export default function LoginPage() {
                     </Form>
                     <p className="mt-6 text-center text-sm text-muted-foreground">
                         Don&apos;t have an account?{' '}
-                        <Link href="#" className="font-semibold text-accent hover:underline">
+                        <Link href="/signup" className="font-semibold text-accent hover:underline">
                             Sign up
                         </Link>
                     </p>
