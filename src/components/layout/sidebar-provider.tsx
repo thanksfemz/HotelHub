@@ -11,12 +11,9 @@ export const SIDEBAR_WIDTH_ICON = '3rem';
 export const SIDEBAR_KEYBOARD_SHORTCUT = 'b';
 
 type SidebarContextType = {
-  state: 'expanded' | 'collapsed';
   open: boolean;
-  setOpen: (open: boolean) => void;
-  openMobile: boolean;
-  setOpenMobile: (open: boolean) => void;
   isMobile: boolean;
+  isSidebarOpen: boolean;
   toggleSidebar: () => void;
 };
 
@@ -51,8 +48,7 @@ export const SidebarProvider = React.forwardRef<
     ref
   ) => {
     const isMobile = useMediaQuery(`(max-width: 768px)`);
-    const [openMobile, setOpenMobile] = React.useState(false);
-
+    
     const [_open, _setOpen] = React.useState(defaultOpen);
     const open = openProp ?? _open;
     const setOpen = React.useCallback(
@@ -68,9 +64,11 @@ export const SidebarProvider = React.forwardRef<
       [setOpenProp, open]
     );
 
+    const isSidebarOpen = isMobile ? open : _open;
+
     const toggleSidebar = React.useCallback(() => {
-      return isMobile ? setOpenMobile((open) => !open) : setOpen((open) => !open);
-    }, [isMobile, setOpen, setOpenMobile]);
+      setOpen(prev => !prev);
+    }, [setOpen]);
 
     React.useEffect(() => {
       const handleKeyDown = (event: KeyboardEvent) => {
@@ -83,19 +81,14 @@ export const SidebarProvider = React.forwardRef<
       return () => window.removeEventListener('keydown', handleKeyDown);
     }, [toggleSidebar]);
 
-    const state = open ? 'expanded' : 'collapsed';
-
     const contextValue = React.useMemo<SidebarContextType>(
       () => ({
-        state,
         open,
-        setOpen,
         isMobile,
-        openMobile,
-        setOpenMobile,
+        isSidebarOpen,
         toggleSidebar,
       }),
-      [state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar]
+      [open, isMobile, isSidebarOpen, toggleSidebar]
     );
 
     return (

@@ -148,7 +148,7 @@ export function SidebarNav() {
   if (isMobile) {
     return (
       <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
-        <Sheet>
+        <Sheet open={isMobile && !isSidebarOpen} onOpenChange={toggleSidebar}>
           <SheetTrigger asChild>
             <Button variant="outline" size="icon" className="h-8 w-8">
               <PanelLeft className="h-4 w-4" />
@@ -190,9 +190,29 @@ export function SidebarNav() {
 }
 
 export function HeaderNav() {
-    const { isMobile } = useSidebar();
+    const { isMobile, isSidebarOpen, toggleSidebar } = useSidebar();
 
-    if (isMobile) return null;
+    if (isMobile) {
+      return (
+      <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
+        <Sheet open={!isSidebarOpen} onOpenChange={toggleSidebar}>
+          <SheetTrigger asChild>
+            <Button variant="outline" size="icon" className="h-8 w-8">
+              <PanelLeft className="h-4 w-4" />
+              <span className="sr-only">Toggle Menu</span>
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left" className="flex flex-col p-0 w-72">
+            <MainNav isCollapsed={false} />
+          </SheetContent>
+        </Sheet>
+        <div className="flex-1">
+          {/* Add mobile header content here if needed, like a search bar */}
+        </div>
+        <UserMenu />
+      </header>
+      )
+    }
 
     return (
         <header className="flex h-14 items-center justify-end gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
@@ -200,4 +220,3 @@ export function HeaderNav() {
         </header>
     );
 }
-
