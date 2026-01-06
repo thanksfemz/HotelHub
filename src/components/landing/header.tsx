@@ -27,6 +27,9 @@ export function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const headerTextColor = isScrolled ? 'text-primary-foreground dark:text-primary-foreground' : 'text-primary-foreground';
+  const headerTextAndLogoColor = isScrolled ? 'text-primary dark:text-primary-foreground' : 'text-primary-foreground';
+
   return (
     <header
       className={cn(
@@ -35,7 +38,7 @@ export function Header() {
       )}
     >
       <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">
-        <Logo className={cn(isScrolled ? 'text-primary' : 'text-primary-foreground')} />
+        <Logo className={cn(headerTextAndLogoColor)} />
         <nav className="hidden items-center gap-6 md:flex">
           {navigationLinks.map((link) => (
             <Link
@@ -43,7 +46,7 @@ export function Header() {
               href={link.href}
               className={cn(
                 'text-sm font-medium transition-colors hover:text-accent',
-                isScrolled ? 'text-primary' : 'text-primary-foreground'
+                headerTextAndLogoColor
               )}
               prefetch={false}
             >
@@ -56,9 +59,8 @@ export function Header() {
             variant="ghost"
             className={cn(
               'hidden md:inline-flex',
-              isScrolled
-                ? 'text-primary hover:bg-accent/10 hover:text-accent'
-                : 'text-primary-foreground hover:bg-primary-foreground/10 hover:text-accent'
+               'hover:bg-primary-foreground/10 hover:text-accent',
+               headerTextAndLogoColor,
             )}
             asChild
           >
@@ -77,7 +79,7 @@ export function Header() {
                 size="icon"
                 className={cn(
                   'md:hidden',
-                  isScrolled ? 'text-primary' : 'text-primary-foreground'
+                  headerTextAndLogoColor,
                 )}
               >
                 <Menu className="h-6 w-6" />
