@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { Toaster as SonnerToaster } from 'sonner';
+import { Toaster } from '@/components/ui/sonner';
 import { ThemeProvider } from '@/components/theme-provider';
 import AuthProvider from '@/components/auth-provider';
 
@@ -33,7 +33,7 @@ export default function RootLayout({
         >
           <AuthProvider>
             {children}
-            <SonnerToaster richColors />
+            <Toaster />
           </AuthProvider>
         </ThemeProvider>
       </body>
