@@ -4,12 +4,34 @@ import { amenities } from '@/lib/placeholder-data';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Check } from 'lucide-react';
-import { Hero } from '@/components/landing/hero';
+import { BookingForm } from '../booking-form';
+import { z } from 'zod';
+import { format } from 'date-fns';
+import { toast } from 'sonner';
+
+const bookingFormSchema = z.object({
+  checkIn: z.date({
+    required_error: 'Check-in date is required.',
+  }),
+  checkOut: z.date({
+    required_error: 'Check-out date is required.',
+  }),
+  guests: z.coerce.number().min(1, { message: 'Must have at least 1 guest.' }),
+});
 
 export function RoomDetails({ room }: { room: Room }) {
+  function onSubmit(values: z.infer<typeof bookingFormSchema>) {
+    toast.info('Booking request sent!', {
+      description: `You are booking the ${room.name} from ${format(values.checkIn, 'PPP')} to ${format(
+        values.checkOut,
+        'PPP'
+      )} for ${values.guests} guest(s).`,
+    });
+  }
+
   return (
     <>
-    <div className="w-full">
+    <div className="w-full pb-20">
       <div className="relative h-[50vh] bg-background">
         <Image
           src={room.image.imageUrl}
@@ -72,11 +94,8 @@ export function RoomDetails({ room }: { room: Room }) {
                     Includes taxes and fees.
                   </p>
                   <div className="mt-6">
-                    <Hero />
+                    <BookingForm onSearch={onSubmit} />
                   </div>
-                  <Button size="lg" className="mt-6 w-full bg-accent text-accent-foreground hover:bg-accent/90">
-                    Book Now
-                  </Button>
                 </CardContent>
               </Card>
             </div>
