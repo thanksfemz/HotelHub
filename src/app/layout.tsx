@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { Toaster } from '@/components/ui/toaster';
+import { Toaster as SonnerToaster } from 'sonner';
 import { ThemeProvider } from '@/components/theme-provider';
+import AuthProvider from '@/components/auth-provider';
 
 export const metadata: Metadata = {
   title: 'HotelHub',
@@ -30,8 +31,10 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
-          <Toaster />
+          <AuthProvider>
+            {children}
+            <SonnerToaster richColors />
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>
