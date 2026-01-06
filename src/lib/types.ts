@@ -1,11 +1,17 @@
 import type { LucideIcon } from 'lucide-react';
 import type { ImagePlaceholder } from './placeholder-images';
 
+export type RoomStatus = 'Available' | 'Occupied' | 'Maintenance' | 'Cleaning';
+export type RoomType = 'Single' | 'Double' | 'Suite' | 'Deluxe';
+
 export type Room = {
   id: string;
-  name: string;
-  description: string;
+  roomNumber: string;
+  type: RoomType;
+  status: RoomStatus;
   price: number;
+  capacity: number;
+  amenities: string[];
   image: ImagePlaceholder;
 };
 
@@ -43,4 +49,12 @@ export type Booking = {
   checkOut: string;
   status: BookingStatus;
   amount: number;
+};
+
+export type RoomFilters = {
+    search: string;
+    type: 'all' | RoomType;
+    status: 'all' | RoomStatus;
+    minPrice: string;
+    maxPrice: string;
 };

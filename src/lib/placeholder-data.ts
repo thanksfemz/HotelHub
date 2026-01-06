@@ -2,7 +2,13 @@ import type { Amenity, Room, Testimonial } from '@/lib/types';
 import { getPlaceholderImage } from './placeholder-images';
 import { Wifi, SquareParking, UtensilsCrossed, Waves, Dumbbell, Sparkles } from 'lucide-react';
 
-export const rooms: Room[] = [
+export const rooms: {
+    id: string;
+    name: string;
+    description: string;
+    price: number;
+    image: ReturnType<typeof getPlaceholderImage>;
+}[] = [
   {
     id: 'deluxe-king-suite',
     name: 'Deluxe King Suite',
