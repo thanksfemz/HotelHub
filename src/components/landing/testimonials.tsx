@@ -1,3 +1,4 @@
+
 'use client';
 
 import Image from 'next/image';
@@ -27,9 +28,9 @@ export function Testimonials() {
           <CarouselContent>
             {testimonials.map((testimonial, index) => (
               <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
-                <div className="p-1">
-                  <Card className="h-full border-none bg-secondary shadow-lg">
-                    <CardContent className="flex flex-col items-center justify-center p-8 text-center">
+                <div className="p-1 h-full">
+                  <Card className="h-full border-none bg-secondary shadow-lg flex flex-col">
+                    <CardContent className="flex flex-col items-center p-8 text-center flex-1">
                       <Image
                         src={testimonial.image.imageUrl}
                         alt={testimonial.image.description}
@@ -38,7 +39,7 @@ export function Testimonials() {
                         className="mb-4 rounded-full"
                         data-ai-hint={testimonial.image.imageHint}
                       />
-                      <p className="mb-4 font-headline text-lg italic text-primary">
+                      <p className="mb-4 font-headline text-lg italic text-primary flex-grow">
                         &quot;{testimonial.quote}&quot;
                       </p>
                       <div className="flex items-center gap-1">
