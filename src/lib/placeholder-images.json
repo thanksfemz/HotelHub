@@ -1,3 +1,82 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero-background",
+      "description": "Luxury hotel exterior at dusk with warm lights",
+      "imageUrl": "https://images.unsplash.com/photo-1551918120-9739cb430c6d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxsdXh1cnklMjBob3RlbHxlbnwwfHx8fDE3Njc2Mzc4ODd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "luxury hotel"
+    },
+    {
+      "id": "room-1",
+      "description": "Spacious suite with a king-sized bed and city view",
+      "imageUrl": "https://images.unsplash.com/photo-1629140727571-9b5c6f6267b4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxob3RlbCUyMHJvb218ZW58MHx8fHwxNzY3NjE0NjI4fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "hotel room"
+    },
+    {
+      "id": "room-2",
+      "description": "Elegant double room with classic decor",
+      "imageUrl": "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxsdXh1cnklMjByb29tfGVufDB8fHx8MTc2NzYzNzM0OXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "luxury room"
+    },
+    {
+      "id": "room-3",
+      "description": "Modern single room with a minimalist design",
+      "imageUrl": "https://images.unsplash.com/photo-1696762932825-2737db830bbe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8bW9kZXJuJTIwYmVkcm9vbXxlbnwwfHx8fDE3Njc1OTY0Mjh8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "modern bedroom"
+    },
+    {
+      "id": "testimonial-1",
+      "description": "Portrait of a smiling guest",
+      "imageUrl": "https://images.unsplash.com/photo-1590086782792-42dd2350140d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxwZXJzb24lMjBwb3J0cmFpdHxlbnwwfHx8fDE3Njc2MzU5OTV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "person portrait"
+    },
+    {
+      "id": "testimonial-2",
+      "description": "Portrait of a happy couple",
+      "imageUrl": "https://images.unsplash.com/photo-1541679368093-5c967ac6de11?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxoYXBweSUyMGNvdXBsZXxlbnwwfHx8fDE3Njc2MjIwMDN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "happy couple"
+    },
+    {
+      "id": "testimonial-3",
+      "description": "Portrait of a satisfied business traveler",
+      "imageUrl": "https://images.unsplash.com/photo-1590649778473-d017b9013d2a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxidXNpbmVzcyUyMHBlcnNvbnxlbnwwfHx8fDE3Njc2MzQ3MDB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "business person"
+    },
+    {
+      "id": "gallery-1",
+      "description": "Hotel lobby with grand staircase",
+      "imageUrl": "https://images.unsplash.com/photo-1611048267451-e6ed903d4a38?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxob3RlbCUyMGxvYmJ5fGVufDB8fHx8MTc2NzYyNDUxNHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "hotel lobby"
+    },
+    {
+      "id": "gallery-2",
+      "description": "Rooftop pool with city skyline view",
+      "imageUrl": "https://images.unsplash.com/photo-1643856938515-ed931dd43a39?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxyb29mdG9wJTIwcG9vbHxlbnwwfHx8fDE3Njc2Mzg3NTJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "rooftop pool"
+    },
+    {
+      "id": "gallery-3",
+      "description": "Fine dining restaurant with elegant table settings",
+      "imageUrl": "https://images.unsplash.com/photo-1616671285410-2a676a9a433d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxmaW5lJTIwZGluaW5nfGVufDB8fHx8MTc2NzYyNDk4M3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "fine dining"
+    },
+    {
+      "id": "gallery-4",
+      "description": "A luxurious spa and wellness center",
+      "imageUrl": "https://images.unsplash.com/photo-1583416750470-965b2707b355?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxzcGElMjB3ZWxsbmVzc3xlbnwwfHx8fDE3Njc2MjM5MjJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "spa wellness"
+    },
+    {
+      "id": "gallery-5",
+      "description": "Close-up of a gourmet dish",
+      "imageUrl": "https://images.unsplash.com/photo-1596189181426-7f63a1737f0d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxnb3VybWV0JTIwZm9vZHxlbnwwfHx8fDE3Njc2Njk0MTJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "gourmet food"
+    },
+    {
+      "id": "gallery-6",
+      "description": "Hotel bar with a wide selection of drinks",
+      "imageUrl": "https://images.unsplash.com/photo-1436018626274-89acd1d6ec9d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxob3RlbCUyMGJhcnxlbnwwfHx8fDE3Njc2NDI5MjF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "hotel bar"
+    }
+  ]
 }
