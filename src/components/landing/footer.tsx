@@ -31,7 +31,7 @@ export function Footer() {
           <div className="flex items-center space-x-4 mt-4">
             <Link href="#" aria-label="Facebook" className="text-primary-foreground/70 transition-colors hover:text-accent" prefetch={false}><Facebook className="h-5 w-5" /></Link>
             <Link href="#" aria-label="Twitter" className="text-primary-foreground/70 transition-colors hover:text-accent" prefetch={false}><Twitter className="h-5 w-5" /></Link>
-            <Link href="#" aria-label="Instagram" className="text-primaryforeground/70 transition-colors hover:text-accent" prefetch={false}><Instagram className="h-5 w-5" /></Link>
+            <Link href="#" aria-label="Instagram" className="text-primary-foreground/70 transition-colors hover:text-accent" prefetch={false}><Instagram className="h-5 w-5" /></Link>
           </div>
         </div>
       </div>

@@ -10,7 +10,7 @@ export function Logo({ className }: LogoProps) {
   return (
     <Link
       href="/"
-      className={cn('flex items-center gap-2 text-primary-foreground', className)}
+      className={cn('flex items-center gap-2', className)}
       prefetch={false}
     >
       <Hotel className="h-7 w-7 text-accent" />
