@@ -7,4 +7,14 @@ export const reportService = {
     const response = await axios.get('/api/reports/dashboard-stats');
     return response.data;
   },
+
+  getOccupancyData: async (days: string) => {
+    const response = await axios.get(`/api/reports/occupancy?days=${days}`);
+    return response.data;
+  },
+
+  getRevenueData: async (days: string) => {
+    const response = await axios.get(`/api/reports/revenue?days=${days}`);
+    return response.data;
+  },
 };

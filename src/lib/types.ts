@@ -21,3 +21,13 @@ export type Testimonial = {
   rating: number;
   image: ImagePlaceholder;
 };
+
+export type OccupancyData = {
+  date: string;
+  occupancy: number;
+};
+
+export type RevenueData = {
+  date: string;
+  revenue: number;
+};
