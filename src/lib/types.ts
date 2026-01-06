@@ -40,15 +40,19 @@ export type RevenueData = {
 };
 
 export type BookingStatus = 'Pending' | 'Confirmed' | 'Checked-in' | 'Checked-out' | 'Cancelled';
+export type PaymentStatus = 'Pending' | 'Paid' | 'Refunded';
 
 export type Booking = {
   id: string;
   guestName: string;
+  guestId: string;
   roomNumber: string;
+  roomId: string;
   checkIn: string;
   checkOut: string;
   status: BookingStatus;
-  amount: number;
+  paymentStatus: PaymentStatus;
+  totalAmount: number;
 };
 
 export type RoomFilters = {
@@ -57,4 +61,10 @@ export type RoomFilters = {
     status: 'all' | RoomStatus;
     minPrice: string;
     maxPrice: string;
+};
+
+export type BookingFilters = {
+  status: 'all' | BookingStatus;
+  dateRange: { from?: Date; to?: Date };
+  guest: string;
 };
