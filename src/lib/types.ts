@@ -61,6 +61,11 @@ export type Guest = {
     email: string;
     phone: string;
     address: string;
+    idProofType?: 'Passport' | 'DriversLicense' | 'NationalID';
+    idProofNumber?: string;
+    totalBookings?: number;
+    totalSpent?: number;
+    lastVisit?: string;
 };
 
 
@@ -76,4 +81,8 @@ export type BookingFilters = {
   status: 'all' | BookingStatus;
   dateRange: { from?: Date; to?: Date };
   guest: string;
+};
+
+export type GuestFilters = {
+    search: string;
 };

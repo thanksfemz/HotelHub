@@ -1,0 +1,165 @@
+'use client';
+
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { useMutation } from '@tanstack/react-query';
+import { toast } from 'sonner';
+
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import type { Guest } from '@/lib/types';
+import { guestService } from '@/lib/services/guestService';
+
+const guestSchema = z.object({
+  name: z.string().min(2, 'Name is required'),
+  email: z.string().email('Invalid email address'),
+  phone: z.string().min(10, 'A valid phone number is required'),
+  idProofType: z.enum(['Passport', 'DriversLicense', 'NationalID']).optional(),
+  idProofNumber: z.string().optional(),
+  address: z.string().optional(),
+});
+
+type GuestFormValues = z.infer<typeof guestSchema>;
+
+interface GuestFormProps {
+  guest?: Guest | null;
+  onSuccess: () => void;
+  onCancel: () => void;
+}
+
+const idProofTypes: Guest['idProofType'][] = ['Passport', 'DriversLicense', 'NationalID'];
+
+export function GuestForm({ guest, onSuccess, onCancel }: GuestFormProps) {
+  const form = useForm<GuestFormValues>({
+    resolver: zodResolver(guestSchema),
+    defaultValues: {
+      name: guest?.name || '',
+      email: guest?.email || '',
+      phone: guest?.phone || '',
+      idProofType: guest?.idProofType,
+      idProofNumber: guest?.idProofNumber || '',
+      address: guest?.address || '',
+    },
+  });
+
+  const mutation = useMutation({
+    mutationFn: (data: GuestFormValues) => {
+      if (guest) {
+        return guestService.updateGuest(guest.id, data);
+      }
+      return guestService.createGuest(data);
+    },
+    onSuccess: () => {
+      toast.success(guest ? 'Guest updated successfully!' : 'Guest created successfully!');
+      onSuccess();
+    },
+    onError: (error) => {
+      toast.error(error.message || (guest ? 'Failed to update guest.' : 'Failed to create guest.'));
+    },
+  });
+
+  const onSubmit = (data: GuestFormValues) => {
+    mutation.mutate(data);
+  };
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 max-h-[70vh] overflow-y-auto p-1 pr-4">
+        <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+            <FormItem>
+                <FormLabel>Full Name</FormLabel>
+                <FormControl><Input placeholder="John Doe" {...field} /></FormControl>
+                <FormMessage />
+            </FormItem>
+            )}
+        />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl><Input type="email" placeholder="john.doe@example.com" {...field} /></FormControl>
+                    <FormMessage />
+                </FormItem>
+                )}
+            />
+            <FormField
+                control={form.control}
+                name="phone"
+                render={({ field }) => (
+                <FormItem>
+                    <FormLabel>Phone</FormLabel>
+                    <FormControl><Input placeholder="(123) 456-7890" {...field} /></FormControl>
+                    <FormMessage />
+                </FormItem>
+                )}
+            />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <FormField
+                control={form.control}
+                name="idProofType"
+                render={({ field }) => (
+                <FormItem>
+                    <FormLabel>ID Proof Type</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                        <SelectTrigger>
+                            <SelectValue placeholder="Select ID type" />
+                        </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                        {idProofTypes.map(type => (
+                            <SelectItem key={type} value={type}>{type}</SelectItem>
+                        ))}
+                        </SelectContent>
+                    </Select>
+                    <FormMessage />
+                </FormItem>
+                )}
+            />
+            <FormField
+                control={form.control}
+                name="idProofNumber"
+                render={({ field }) => (
+                <FormItem>
+                    <FormLabel>ID Proof Number</FormLabel>
+                    <FormControl><Input placeholder="ID Number" {...field} /></FormControl>
+                    <FormMessage />
+                </FormItem>
+                )}
+            />
+        </div>
+         <FormField
+            control={form.control}
+            name="address"
+            render={({ field }) => (
+            <FormItem>
+                <FormLabel>Address</FormLabel>
+                <FormControl><Textarea placeholder="123 Main St, Anytown, USA" {...field} /></FormControl>
+                <FormMessage />
+            </FormItem>
+            )}
+        />
+        
+        <div className="flex justify-end gap-2 pt-4">
+          <Button type="button" variant="outline" onClick={onCancel}>
+            Cancel
+          </Button>
+          <Button type="submit" disabled={mutation.isPending}>
+            {mutation.isPending ? 'Saving...' : 'Save Guest'}
+          </Button>
+        </div>
+      </form>
+    </Form>
+  );
+}
