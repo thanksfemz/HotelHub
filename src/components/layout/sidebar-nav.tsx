@@ -36,21 +36,21 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
 const navItems = [
-  { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard', roles: ['admin', 'manager', 'staff'] },
-  { href: '/rooms', icon: BedDouble, label: 'Rooms', roles: ['admin', 'manager', 'staff'] },
-  { href: '/bookings', icon: CalendarCheck2, label: 'Bookings', roles: ['admin', 'manager', 'staff'] },
-  { href: '/guests', icon: Users, label: 'Guests', roles: ['admin', 'manager', 'staff'] },
-  { href: '/payments', icon: CreditCard, label: 'Payments', roles: ['admin', 'manager'] },
-  { href: '/staff', icon: UserCog, label: 'Staff', roles: ['admin'] },
-  { href: '/services', icon: Sparkles, label: 'Services', roles: ['admin', 'manager'] },
-  { href: '/reports', icon: BarChart3, label: 'Reports', roles: ['admin', 'manager'] },
+  { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard', roles: ['Admin', 'Manager', 'Receptionist'] },
+  { href: '/rooms', icon: BedDouble, label: 'Rooms', roles: ['Admin', 'Manager', 'Receptionist'] },
+  { href: '/bookings', icon: CalendarCheck2, label: 'Bookings', roles: ['Admin', 'Manager', 'Receptionist'] },
+  { href: '/guests', icon: Users, label: 'Guests', roles: ['Admin', 'Manager', 'Receptionist'] },
+  { href: '/payments', icon: CreditCard, label: 'Payments', roles: ['Admin', 'Manager'] },
+  { href: '/staff', icon: UserCog, label: 'Staff', roles: ['Admin'] },
+  { href: '/services', icon: Sparkles, label: 'Services', roles: ['Admin', 'Manager'] },
+  { href: '/reports', icon: BarChart3, label: 'Reports', roles: ['Admin', 'Manager'] },
 ];
 
 const settingsNav = {
   href: '/settings',
   icon: Settings,
   label: 'Settings',
-  roles: ['admin'],
+  roles: ['Admin'],
 };
 
 function NavItem({ href, icon: Icon, label, isCollapsed }: any) {
@@ -58,10 +58,11 @@ function NavItem({ href, icon: Icon, label, isCollapsed }: any) {
   const isActive = pathname === href;
 
   return (
-    <Link href={href}>
+    <Link href={href} legacyBehavior passHref>
       <Button
         variant={isActive ? 'secondary' : 'ghost'}
         className={cn('w-full justify-start', isCollapsed && 'justify-center')}
+        as="a"
       >
         <Icon className={cn('mr-2 h-4 w-4', isCollapsed && 'mr-0')} />
         {!isCollapsed && label}
@@ -102,7 +103,7 @@ function UserMenu() {
                 <DropdownMenuItem asChild>
                     <Link href="/profile"><User className="mr-2 h-4 w-4" />Profile</Link>
                 </DropdownMenuItem>
-                 {user?.role === 'admin' && (
+                 {user?.role === 'Admin' && (
                     <DropdownMenuItem asChild>
                         <Link href="/settings"><Settings className="mr-2 h-4 w-4" />Settings</Link>
                     </DropdownMenuItem>
@@ -119,22 +120,22 @@ function UserMenu() {
 
 function MainNav({ isCollapsed }: { isCollapsed: boolean }) {
   const { user } = useAuthStore();
-  const userRole = user?.role || 'staff';
+  const userRole = user?.role || 'Receptionist';
 
   const filteredNavItems = navItems.filter(item => item.roles.includes(userRole));
   const showSettings = settingsNav.roles.includes(userRole);
   
   return (
     <div className="flex h-full flex-col">
-      <div className={cn("flex items-center p-4", isCollapsed ? 'justify-center' : 'justify-between')}>
+      <div className={cn("flex items-center p-4 h-14", isCollapsed ? 'justify-center' : 'justify-between')}>
         {!isCollapsed && <Logo />}
       </div>
-      <nav className="flex-1 space-y-2 px-2">
+      <nav className="flex-1 space-y-1 px-2">
         {filteredNavItems.map((item) => (
           <NavItem key={item.href} {...item} isCollapsed={isCollapsed} />
         ))}
       </nav>
-      <div className="mt-auto space-y-2 p-2">
+      <div className="mt-auto space-y-1 p-2">
         {showSettings && <NavItem {...settingsNav} isCollapsed={isCollapsed} />}
       </div>
     </div>
@@ -145,40 +146,20 @@ export function SidebarNav() {
   const { open: isSidebarOpen, isMobile, toggleSidebar } = useSidebar();
   const isCollapsed = isMobile ? false : !isSidebarOpen;
 
-  if (isMobile) {
-    return (
-      <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
-        <Sheet open={isMobile && !isSidebarOpen} onOpenChange={toggleSidebar}>
-          <SheetTrigger asChild>
-            <Button variant="outline" size="icon" className="h-8 w-8">
-              <PanelLeft className="h-4 w-4" />
-              <span className="sr-only">Toggle Menu</span>
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="left" className="flex flex-col p-0 w-72">
-            <MainNav isCollapsed={false} />
-          </SheetContent>
-        </Sheet>
-        <div className="flex-1">
-          {/* Add mobile header content here if needed, like a search bar */}
-        </div>
-        <UserMenu />
-      </header>
-    );
-  }
+  if (isMobile) return null;
 
   return (
     <div
       className={cn(
         'hidden border-r bg-muted/40 md:block transition-all duration-300',
-        isSidebarOpen ? 'w-72' : 'w-20'
+        isSidebarOpen ? 'w-60' : 'w-20'
       )}
     >
       <div className="relative h-full">
          <Button 
             variant="ghost" 
             size="icon" 
-            className="absolute -right-4 top-4 z-10"
+            className="absolute -right-5 top-4 z-10 bg-background border rounded-full h-8 w-8 hidden md:flex"
             onClick={toggleSidebar}
           >
             <PanelLeft className={cn("h-4 w-4 transition-transform", isSidebarOpen && "rotate-180")} />
@@ -192,30 +173,23 @@ export function SidebarNav() {
 export function HeaderNav() {
     const { isMobile, isSidebarOpen, toggleSidebar } = useSidebar();
 
-    if (isMobile) {
-      return (
-      <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
-        <Sheet open={!isSidebarOpen} onOpenChange={toggleSidebar}>
-          <SheetTrigger asChild>
-            <Button variant="outline" size="icon" className="h-8 w-8">
-              <PanelLeft className="h-4 w-4" />
-              <span className="sr-only">Toggle Menu</span>
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="left" className="flex flex-col p-0 w-72">
-            <MainNav isCollapsed={false} />
-          </SheetContent>
-        </Sheet>
-        <div className="flex-1">
-          {/* Add mobile header content here if needed, like a search bar */}
-        </div>
-        <UserMenu />
-      </header>
-      )
-    }
-
     return (
-        <header className="flex h-14 items-center justify-end gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
+        <header className="flex h-14 items-center justify-between lg:justify-end gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
+            <Sheet open={isMobile && isSidebarOpen} onOpenChange={toggleSidebar}>
+                <SheetTrigger asChild>
+                    <Button variant="outline" size="icon" className="shrink-0 md:hidden">
+                        <PanelLeft className="h-5 w-5" />
+                        <span className="sr-only">Toggle navigation menu</span>
+                    </Button>
+                </SheetTrigger>
+                <SheetContent side="left" className="flex flex-col p-0 w-60">
+                    <MainNav isCollapsed={false} />
+                </SheetContent>
+            </Sheet>
+            <div className="md:hidden flex-1">
+                <Logo />
+            </div>
+
             <UserMenu />
         </header>
     );
