@@ -1,4 +1,3 @@
-
 'use client';
 
 import React from 'react';
@@ -45,12 +44,12 @@ export function Invoice({ payment }: InvoiceProps) {
       )
   }
   
-  const nights = differenceInDays(new Date(booking.checkOut), new Date(booking.checkIn));
-  const roomCost = booking.totalAmount / (nights || 1); // Avoid division by zero
-  const taxRate = 0.1; // 10%
+  const nights = differenceInDays(new Date(booking.checkOutDate), new Date(booking.checkInDate));
   const subTotal = booking.totalAmount;
+  const taxRate = 0.1; // 10%
   const tax = subTotal * taxRate;
   const total = subTotal + tax;
+  const roomCost = subTotal / (nights || 1); // Avoid division by zero
 
 
   return (
@@ -72,7 +71,7 @@ export function Invoice({ payment }: InvoiceProps) {
         <section className="grid grid-cols-2 gap-8 my-8">
             <div>
                 <h3 className="font-semibold text-muted-foreground mb-2">Bill To</h3>
-                <p className="font-bold">{guest.name}</p>
+                <p className="font-bold">{guest.firstName} {guest.lastName}</p>
                 <p>{guest.address}</p>
                 <p>{guest.email}</p>
                 <p>{guest.phone}</p>
@@ -81,8 +80,8 @@ export function Invoice({ payment }: InvoiceProps) {
                 <h3 className="font-semibold text-muted-foreground mb-2">Booking Details</h3>
                 <p><span className="font-semibold">Booking ID:</span> {booking.id}</p>
                 <p><span className="font-semibold">Room:</span> {booking.roomNumber}</p>
-                <p><span className="font-semibold">Check-in:</span> {format(new Date(booking.checkIn), 'PPP')}</p>
-                <p><span className="font-semibold">Check-out:</span> {format(new Date(booking.checkOut), 'PPP')}</p>
+                <p><span className="font-semibold">Check-in:</span> {format(new Date(booking.checkInDate), 'PPP')}</p>
+                <p><span className="font-semibold">Check-out:</span> {format(new Date(booking.checkOutDate), 'PPP')}</p>
              </div>
         </section>
 

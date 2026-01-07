@@ -1,10 +1,10 @@
 
 import axios from '@/lib/axios';
-import type { Guest, GuestFilters, CreateGuestRequest, UpdateGuestRequest } from '@/lib/types/guest';
+import type { Guest, CreateGuestRequest, UpdateGuestRequest, GuestFilters } from '@/lib/types/guest';
 import type { Booking } from '@/lib/types/booking';
 
 export const guestService = {
-  getGuests: async (filters?: Partial<GuestFilters>): Promise<Guest[]> => {
+  getGuests: async (filters?: GuestFilters): Promise<Guest[]> => {
     const response = await axios.get('/api/guests', {
         params: filters
     });

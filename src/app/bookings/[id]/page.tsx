@@ -15,11 +15,11 @@ import type { BookingStatus } from '@/lib/types';
 import { useRouter } from 'next/navigation';
 
 const statusColors: Record<BookingStatus, string> = {
-  Pending: 'bg-yellow-500/10 text-yellow-600 border-yellow-500/20',
-  Confirmed: 'bg-blue-500/10 text-blue-600 border-blue-500/20',
-  'Checked-in': 'bg-green-500/10 text-green-600 border-green-500/20',
-  'Checked-out': 'bg-gray-500/10 text-gray-600 border-gray-500/20',
-  Cancelled: 'bg-red-500/10 text-red-600 border-red-500/20',
+  PENDING: 'bg-yellow-500/10 text-yellow-600 border-yellow-500/20',
+  CONFIRMED: 'bg-blue-500/10 text-blue-600 border-blue-500/20',
+  CHECKED_IN: 'bg-green-500/10 text-green-600 border-green-500/20',
+  CHECKED_OUT: 'bg-gray-500/10 text-gray-600 border-gray-500/20',
+  CANCELLED: 'bg-red-500/10 text-red-600 border-red-500/20',
 };
 
 function DetailItem({ icon: Icon, label, value }: { icon: React.ElementType, label: string, value: React.ReactNode }) {
@@ -70,7 +70,7 @@ export default function BookingDetailsPage({ params }: { params: { id: string } 
                         <div>
                             <CardTitle className="text-2xl">Booking ID: {booking.id}</CardTitle>
                             <CardDescription>
-                                Booked on {format(new Date(booking.checkIn), 'PP')}
+                                Booked on {format(new Date(booking.createdAt), 'PP')}
                             </CardDescription>
                         </div>
                         <Badge className={cn('text-base', statusColors[booking.status])} variant="outline">{booking.status}</Badge>
@@ -87,11 +87,11 @@ export default function BookingDetailsPage({ params }: { params: { id: string } 
                             Room {booking.roomNumber}
                         </Link>
                    } />
-                   <DetailItem icon={Calendar} label="Check-in" value={format(new Date(booking.checkIn), 'EEEE, MMMM d, yyyy')} />
-                   <DetailItem icon={Calendar} label="Check-out" value={format(new Date(booking.checkOut), 'EEEE, MMMM d, yyyy')} />
+                   <DetailItem icon={Calendar} label="Check-in" value={format(new Date(booking.checkInDate), 'EEEE, MMMM d, yyyy')} />
+                   <DetailItem icon={Calendar} label="Check-out" value={format(new Date(booking.checkOutDate), 'EEEE, MMMM d, yyyy')} />
                    <DetailItem icon={DollarSign} label="Total Amount" value={`$${booking.totalAmount.toFixed(2)}`} />
                    <DetailItem icon={CreditCard} label="Payment Status" value={
-                    <Badge variant={booking.paymentStatus === 'Paid' ? 'default' : 'secondary'} className={booking.paymentStatus === 'Paid' ? 'bg-green-600' : ''}>
+                    <Badge variant={booking.paymentStatus === 'PAID' ? 'default' : 'secondary'} className={booking.paymentStatus === 'PAID' ? 'bg-green-600' : ''}>
                         {booking.paymentStatus}
                     </Badge>
                    } />

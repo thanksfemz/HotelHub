@@ -43,16 +43,21 @@ export function GuestProfile({ guestId }: GuestProfileProps) {
     if (isLoading) return <GuestProfileSkeleton />;
     if (error || !guest) return <div>Error loading guest profile.</div>;
     
+    const guestName = `${guest.firstName} ${guest.lastName}`;
+    const totalBookings = bookings.length;
+    const totalSpent = bookings.reduce((acc, b) => acc + b.totalAmount, 0);
+    const lastVisit = totalBookings > 0 ? format(new Date(Math.max(...bookings.map(b => new Date(b.checkInDate).getTime()))), 'PP') : 'N/A';
+
     return (
         <div className="space-y-6 p-1 max-h-[80vh] overflow-y-auto pr-4">
             <Card>
                 <CardContent className="p-6 flex flex-col sm:flex-row items-start gap-6">
                     <Avatar className="h-24 w-24 border-2 border-primary">
-                        <AvatarImage src={`https://avatar.vercel.sh/${guest.email}.png`} alt={guest.name} />
-                        <AvatarFallback>{guest.name.charAt(0)}</AvatarFallback>
+                        <AvatarImage src={`https://avatar.vercel.sh/${guest.email}.png`} alt={guestName} />
+                        <AvatarFallback>{guestName.charAt(0)}</AvatarFallback>
                     </Avatar>
                     <div className="flex-1">
-                        <h2 className="text-3xl font-bold font-headline text-primary">{guest.name}</h2>
+                        <h2 className="text-3xl font-bold font-headline text-primary">{guestName}</h2>
                         <div className="mt-2 space-y-1 text-sm text-muted-foreground">
                             <p className="flex items-center gap-2"><Mail className="h-4 w-4"/> {guest.email}</p>
                             <p className="flex items-center gap-2"><Phone className="h-4 w-4"/> {guest.phone}</p>
@@ -64,9 +69,9 @@ export function GuestProfile({ guestId }: GuestProfileProps) {
             </Card>
 
             <div className="flex flex-col sm:flex-row gap-4">
-                <StatCard icon={Briefcase} label="Total Bookings" value={guest.totalBookings ?? bookings.length} />
-                <StatCard icon={DollarSign} label="Total Spent" value={`$${(guest.totalSpent ?? 0).toLocaleString()}`} />
-                <StatCard icon={Calendar} label="Last Visit" value={guest.lastVisit ? format(new Date(guest.lastVisit), 'PP') : 'N/A'} />
+                <StatCard icon={Briefcase} label="Total Bookings" value={totalBookings} />
+                <StatCard icon={DollarSign} label="Total Spent" value={`$${totalSpent.toLocaleString()}`} />
+                <StatCard icon={Calendar} label="Last Visit" value={lastVisit} />
             </div>
 
             <Card>

@@ -1,25 +1,26 @@
 
-export type PaymentMethod = 'CASH' | 'CREDIT_CARD' | 'DEBIT_CARD' | 'UPI' | 'BANK_TRANSFER';
-export type PaymentStatus = 'PENDING' | 'COMPLETED' | 'FAILED' | 'REFUNDED';
+
+export type PaymentMethod = 'Card' | 'Cash' | 'Bank Transfer' | 'UPI';
+export type PaymentStatusAPI = 'Paid' | 'Pending' | 'Refunded' | 'Failed';
 
 export interface Payment {
   id: string;
   bookingId: string;
   amount: number;
-  paymentMethod: PaymentMethod;
-  paymentStatus: PaymentStatus;
+  method: PaymentMethod;
+  status: PaymentStatusAPI;
   transactionId?: string;
-  paymentDate: string;
+  date: string;
   notes?: string;
-  createdBy: string; // User ID
-  createdAt: string;
+  createdBy?: string; // User ID
+  createdAt?: string;
   guestName?: string; // Denormalized
 }
 
 export interface CreatePaymentRequest {
   bookingId: string;
   amount: number;
-  paymentMethod: PaymentMethod;
+  method: PaymentMethod;
   transactionId?: string;
   notes?: string;
   createdBy: string;
@@ -32,7 +33,13 @@ export interface RefundRequest {
 
 export interface PaymentFilters {
   method?: 'all' | PaymentMethod;
-  status?: 'all' | PaymentStatus;
+  status?: 'all' | PaymentStatusAPI;
   dateRange?: { from?: Date; to?: Date };
   bookingId?: string;
+}
+
+export interface PaymentSummary {
+    totalRevenue: number;
+    pendingPayments: number;
+    totalRefunds: number;
 }

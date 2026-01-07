@@ -14,14 +14,16 @@ import { Textarea } from '@/components/ui/textarea';
 import type { Room, RoomStatus, RoomType } from '@/lib/types';
 import { roomService } from '@/lib/services/roomService';
 import { Checkbox } from '../ui/checkbox';
-import { allAmenities } from '@/lib/placeholder-data';
+import { allAmenities } from '@/lib/mock-data-layer';
 
 const roomSchema = z.object({
   roomNumber: z.string().min(1, 'Room number is required'),
-  type: z.enum(['Single', 'Double', 'Suite', 'Deluxe']),
-  status: z.enum(['Available', 'Occupied', 'Maintenance', 'Cleaning']),
+  roomType: z.enum(['SINGLE', 'DOUBLE', 'SUITE', 'DELUXE', 'PRESIDENTIAL']),
+  status: z.enum(['AVAILABLE', 'OCCUPIED', 'MAINTENANCE', 'CLEANING']),
   price: z.coerce.number().positive('Price must be a positive number'),
   capacity: z.coerce.number().int().positive('Capacity must be a positive integer'),
+  floorNumber: z.coerce.number().int().positive('Floor must be a positive integer'),
+  description: z.string().min(1, 'Description is required'),
   amenities: z.array(z.string()).min(1, 'Select at least one amenity'),
 });
 
@@ -33,28 +35,31 @@ interface RoomFormProps {
   onCancel: () => void;
 }
 
-const roomTypes: RoomType[] = ['Single', 'Double', 'Suite', 'Deluxe'];
-const roomStatuses: RoomStatus[] = ['Available', 'Occupied', 'Maintenance', 'Cleaning'];
+const roomTypes: RoomType[] = ['SINGLE', 'DOUBLE', 'SUITE', 'DELUXE', 'PRESIDENTIAL'];
+const roomStatuses: RoomStatus[] = ['AVAILABLE', 'OCCUPIED', 'MAINTENANCE', 'CLEANING'];
 
 export function RoomForm({ room, onSuccess, onCancel }: RoomFormProps) {
   const form = useForm<RoomFormValues>({
     resolver: zodResolver(roomSchema),
     defaultValues: {
       roomNumber: room?.roomNumber || '',
-      type: room?.type || 'Single',
-      status: room?.status || 'Available',
+      roomType: room?.roomType || 'SINGLE',
+      status: room?.status || 'AVAILABLE',
       price: room?.price || 0,
       capacity: room?.capacity || 1,
+      floorNumber: room?.floorNumber || 1,
+      description: room?.description || '',
       amenities: room?.amenities || [],
     },
   });
 
   const mutation = useMutation({
     mutationFn: (data: RoomFormValues) => {
+      const requestData = {...data, imageUrl: room?.imageUrl || ''};
       if (room) {
-        return roomService.updateRoom(room.id, data);
+        return roomService.updateRoom(room.id, requestData);
       }
-      return roomService.createRoom(data);
+      return roomService.createRoom(requestData);
     },
     onSuccess: () => {
       toast.success(room ? 'Room updated successfully!' : 'Room created successfully!');
@@ -88,7 +93,7 @@ export function RoomForm({ room, onSuccess, onCancel }: RoomFormProps) {
             />
              <FormField
               control={form.control}
-              name="type"
+              name="roomType"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Room Type</FormLabel>
@@ -134,6 +139,19 @@ export function RoomForm({ room, onSuccess, onCancel }: RoomFormProps) {
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="floorNumber"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Floor</FormLabel>
+                  <FormControl>
+                    <Input type="number" placeholder="1" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
              <FormField
                 control={form.control}
                 name="status"
@@ -157,6 +175,18 @@ export function RoomForm({ room, onSuccess, onCancel }: RoomFormProps) {
                 )}
             />
         </div>
+
+         <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+            <FormItem>
+                <FormLabel>Description</FormLabel>
+                <FormControl><Textarea placeholder="A cozy room with a great view." {...field} /></FormControl>
+                <FormMessage />
+            </FormItem>
+            )}
+        />
         
         <FormField
             control={form.control}

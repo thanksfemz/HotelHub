@@ -1,3 +1,4 @@
+
 'use client';
 
 import { format } from 'date-fns';
@@ -7,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import type { Staff, StaffRole, StaffStatus } from '@/lib/types';
+import type { Staff, StaffRole } from '@/lib/types';
 import { Avatar, AvatarFallback } from '../ui/avatar';
 
 const roleColors: Record<StaffRole, string> = {
@@ -15,11 +16,6 @@ const roleColors: Record<StaffRole, string> = {
   Manager: 'bg-purple-500/10 text-purple-600 border-purple-500/20',
   Receptionist: 'bg-blue-500/10 text-blue-600 border-blue-500/20',
   Housekeeping: 'bg-green-500/10 text-green-600 border-green-500/20',
-};
-
-const statusColors: Record<StaffStatus, string> = {
-  Active: 'bg-green-500/10 text-green-600 border-green-500/20',
-  Inactive: 'bg-gray-500/10 text-gray-600 border-gray-500/20',
 };
 
 interface StaffTableProps {
@@ -43,26 +39,31 @@ export function StaffTable({ staffList, onEdit, onDelete }: StaffTableProps) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {staffList.map((staff) => (
+          {staffList.map((staff) => {
+            const staffName = staff.name || `${staff.firstName} ${staff.lastName}`;
+            return (
             <TableRow key={staff.id}>
               <TableCell>
                 <div className="flex items-center gap-3">
                   <Avatar className="h-9 w-9">
-                    <AvatarFallback>{staff.name.charAt(0)}</AvatarFallback>
+                    <AvatarFallback>{staffName.charAt(0)}</AvatarFallback>
                   </Avatar>
                   <div>
-                    <div className="font-medium">{staff.name}</div>
+                    <div className="font-medium">{staffName}</div>
                     <div className="text-xs text-muted-foreground">{staff.id}</div>
                   </div>
                 </div>
               </TableCell>
               <TableCell className="hidden md:table-cell">
-                <div>{staff.email}</div>
                 <div className="text-xs text-muted-foreground">{staff.phone}</div>
               </TableCell>
               <TableCell><Badge variant="outline" className={cn(roleColors[staff.role])}>{staff.role}</Badge></TableCell>
               <TableCell className="hidden lg:table-cell">{format(new Date(staff.joinedDate), 'PP')}</TableCell>
-              <TableCell><Badge variant="outline" className={cn(statusColors[staff.status])}>{staff.status}</Badge></TableCell>
+              <TableCell>
+                <Badge variant="outline" className={cn(staff.status === 'Active' ? 'bg-green-500/10 text-green-600' : 'bg-gray-500/10 text-gray-600')}>
+                    {staff.status}
+                </Badge>
+              </TableCell>
               <TableCell>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -78,7 +79,7 @@ export function StaffTable({ staffList, onEdit, onDelete }: StaffTableProps) {
                 </DropdownMenu>
               </TableCell>
             </TableRow>
-          ))}
+          )})}
         </TableBody>
       </Table>
     </div>

@@ -2,17 +2,7 @@
 
 import { create } from 'zustand';
 import { useEffect, useMemo } from 'react';
-
-type User = {
-  id: string;
-  name: string;
-  email: string;
-  role: 'Admin' | 'Manager' | 'Receptionist';
-  phone?: string;
-  avatar?: string;
-  createdAt: string;
-};
-
+import type { User } from '@/lib/types/auth';
 
 type AuthState = {
   user: User | null;
@@ -23,24 +13,9 @@ type AuthState = {
   setHasHydrated: (hydrated: boolean) => void;
 };
 
-const getInitialState = () => {
-    if (typeof window !== 'undefined') {
-        const token = localStorage.getItem('token');
-        const userStr = localStorage.getItem('user');
-        if (token && userStr) {
-            try {
-                const user = JSON.parse(userStr);
-                return { token, user };
-            } catch (e) {
-                return { token: null, user: null };
-            }
-        }
-    }
-    return { token: null, user: null };
-}
-
-export const useAuthStore = create<AuthState>((set) => ({
-  ...getInitialState(),
+const useAuthStore = create<AuthState>((set) => ({
+  user: null,
+  token: null,
   _hasHydrated: false,
   setHasHydrated: (hydrated) => {
     set({ _hasHydrated: hydrated });
@@ -63,29 +38,33 @@ export const useAuthStore = create<AuthState>((set) => ({
 
 export const useAuthInit = () => {
   useEffect(() => {
-    const user = localStorage.getItem('user');
-    const token = localStorage.getItem('token');
-    if (user && token) {
-      try {
-        useAuthStore.getState().setAuth(JSON.parse(user), token);
-      } catch (error) {
-        useAuthStore.getState().clearAuth();
+    if (typeof window !== 'undefined') {
+      const userStr = localStorage.getItem('user');
+      const token = localStorage.getItem('token');
+      if (userStr && token) {
+        try {
+          useAuthStore.getState().setAuth(JSON.parse(userStr), token);
+        } catch (error) {
+          useAuthStore.getState().clearAuth();
+        }
       }
+      useAuthStore.getState().setHasHydrated(true);
     }
-    useAuthStore.getState().setHasHydrated(true);
   }, []);
 };
 
 export const useIsAuthenticated = () => {
-  const { token, _hasHydrated } = useAuthStore();
+  const { token, _hasHydrated } = useAuthStore((state) => ({ token: state.token, _hasHydrated: state._hasHydrated }));
   
   return useMemo(() => {
+    if (typeof window === 'undefined') {
+      return false;
+    }
     if (!_hasHydrated) {
-        if (typeof window !== 'undefined') {
-            return !!localStorage.getItem('token');
-        }
-        return false;
-    };
+      return !!localStorage.getItem('token');
+    }
     return !!token;
   }, [token, _hasHydrated]);
 };
+
+export default useAuthStore;

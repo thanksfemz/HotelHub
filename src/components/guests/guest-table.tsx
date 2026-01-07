@@ -1,7 +1,7 @@
+
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { format } from 'date-fns';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -24,15 +24,15 @@ export function GuestTable({ guests, onView, onEdit, onDelete }: GuestTableProps
           <TableRow>
             <TableHead>Name</TableHead>
             <TableHead className="hidden md:table-cell">Contact</TableHead>
-            <TableHead className="hidden lg:table-cell">Total Bookings</TableHead>
-            <TableHead className="hidden sm:table-cell">Last Visit</TableHead>
             <TableHead>
               <span className="sr-only">Actions</span>
             </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {guests.map((guest) => (
+          {guests.map((guest) => {
+            const guestName = guest.name || `${guest.firstName} ${guest.lastName}`;
+            return (
             <TableRow
               key={guest.id}
               onClick={() => onView(guest)}
@@ -41,11 +41,11 @@ export function GuestTable({ guests, onView, onEdit, onDelete }: GuestTableProps
               <TableCell>
                 <div className="flex items-center gap-3">
                   <Avatar className="h-9 w-9">
-                    <AvatarImage src={`https://avatar.vercel.sh/${guest.email}.png`} alt={guest.name} />
-                    <AvatarFallback>{guest.name.charAt(0)}</AvatarFallback>
+                    <AvatarImage src={`https://avatar.vercel.sh/${guest.email}.png`} alt={guestName} />
+                    <AvatarFallback>{guestName.charAt(0)}</AvatarFallback>
                   </Avatar>
                   <div>
-                    <div className="font-medium">{guest.name}</div>
+                    <div className="font-medium">{guestName}</div>
                     <div className="text-xs text-muted-foreground">{guest.id}</div>
                   </div>
                 </div>
@@ -53,10 +53,6 @@ export function GuestTable({ guests, onView, onEdit, onDelete }: GuestTableProps
               <TableCell className="hidden md:table-cell">
                 <div>{guest.email}</div>
                 <div className="text-xs text-muted-foreground">{guest.phone}</div>
-              </TableCell>
-              <TableCell className="hidden lg:table-cell text-center">{guest.totalBookings}</TableCell>
-              <TableCell className="hidden sm:table-cell">
-                {guest.lastVisit ? format(new Date(guest.lastVisit), 'PP') : 'N/A'}
               </TableCell>
               <TableCell>
                 <DropdownMenu>
@@ -85,7 +81,7 @@ export function GuestTable({ guests, onView, onEdit, onDelete }: GuestTableProps
                 </DropdownMenu>
               </TableCell>
             </TableRow>
-          ))}
+          )})}
         </TableBody>
       </Table>
     </div>

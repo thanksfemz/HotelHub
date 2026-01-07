@@ -1,6 +1,6 @@
-
 import axios from '@/lib/axios';
 import type { DashboardStats, OccupancyReport, RevenueReport } from '@/lib/types/report';
+import { format } from 'date-fns';
 
 export const reportService = {
   getDashboardStats: async (): Promise<DashboardStats> => {
@@ -8,11 +8,23 @@ export const reportService = {
     return response.data;
   },
 
+  getOccupancyData: async (period: string): Promise<any> => {
+    // This is a placeholder. A real implementation would fetch data based on the period.
+    const response = await reportService.getOccupancyReport(new Date(), new Date());
+    return response.data;
+  },
+
+  getRevenueData: async (period: string): Promise<any> => {
+    // This is a placeholder. A real implementation would fetch data based on the period.
+    const response = await reportService.getRevenueReport(new Date(), new Date());
+    return response.data;
+  },
+
   getOccupancyReport: async (startDate: Date, endDate: Date): Promise<OccupancyReport> => {
     const response = await axios.get(`/api/reports/occupancy`, {
       params: {
-        startDate: startDate.toISOString(),
-        endDate: endDate.toISOString(),
+        startDate: format(startDate, 'yyyy-MM-dd'),
+        endDate: format(endDate, 'yyyy-MM-dd'),
       }
     });
     return response.data;
@@ -21,8 +33,8 @@ export const reportService = {
   getRevenueReport: async (startDate: Date, endDate: Date): Promise<RevenueReport> => {
     const response = await axios.get(`/api/reports/revenue`, {
        params: {
-        startDate: startDate.toISOString(),
-        endDate: endDate.toISOString(),
+        startDate: format(startDate, 'yyyy-MM-dd'),
+        endDate: format(endDate, 'yyyy-MM-dd'),
       }
     });
     return response.data;

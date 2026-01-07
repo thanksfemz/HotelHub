@@ -12,8 +12,8 @@ type RoomFiltersProps = {
   onFiltersChange: (filters: RoomFiltersType) => void;
 };
 
-const roomTypes: ('all' | RoomType)[] = ['all', 'Single', 'Double', 'Suite', 'Deluxe'];
-const roomStatuses: ('all' | RoomStatus)[] = ['all', 'Available', 'Occupied', 'Maintenance', 'Cleaning'];
+const roomTypes: ('all' | RoomType)[] = ['all', 'SINGLE', 'DOUBLE', 'SUITE', 'DELUXE', 'PRESIDENTIAL'];
+const roomStatuses: ('all' | RoomStatus)[] = ['all', 'AVAILABLE', 'OCCUPIED', 'MAINTENANCE', 'CLEANING'];
 
 export function RoomFilters({ filters, onFiltersChange }: RoomFiltersProps) {
   
@@ -22,7 +22,7 @@ export function RoomFilters({ filters, onFiltersChange }: RoomFiltersProps) {
   };
 
   const handleSelectChange = (name: 'type' | 'status') => (value: string) => {
-    onFiltersChange({ ...filters, [name]: value });
+    onFiltersChange({ ...filters, [name]: value as any });
   };
   
   const clearFilters = () => {

@@ -40,7 +40,7 @@ export function RoomRow({ room, onEdit, onDelete }: RoomRowProps) {
 
       <div>
         <p className="font-bold text-primary">Room {room.roomNumber}</p>
-        <p className="text-sm text-muted-foreground">{room.type}</p>
+        <p className="text-sm text-muted-foreground">{room.roomType}</p>
       </div>
 
       <div className="hidden sm:block">

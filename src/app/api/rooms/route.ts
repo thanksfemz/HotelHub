@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import type { Room, RoomStatus, RoomType } from '@/lib/types';
+import type { Room } from '@/lib/types';
 import { getPlaceholderImage } from '@/lib/placeholder-images';
 import { rooms as mockRooms } from '@/lib/mock-data-layer';
 
@@ -19,7 +19,7 @@ export async function GET(request: Request) {
     data = data.filter(room => room.roomNumber.toLowerCase().includes(search.toLowerCase()));
   }
   if (type && type !== 'all') {
-    data = data.filter(room => room.type === type);
+    data = data.filter(room => room.roomType === type);
   }
   if (status && status !== 'all') {
     data = data.filter(room => room.status === status);
@@ -43,6 +43,8 @@ export async function POST(request: Request) {
         ...body,
         id: `R${Math.floor(Math.random() * 1000) + 200}`,
         image: getPlaceholderImage('room-1'),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
     }
     rooms.unshift(newRoom); // Add to the beginning
     return NextResponse.json(newRoom, { status: 201 });

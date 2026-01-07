@@ -16,7 +16,7 @@ type BookingFiltersProps = {
   onFiltersChange: (filters: BookingFiltersType) => void;
 };
 
-const bookingStatuses: ('all' | BookingStatus)[] = ['all', 'Pending', 'Confirmed', 'Checked-in', 'Checked-out', 'Cancelled'];
+const bookingStatuses: ('all' | BookingStatus)[] = ['all', 'PENDING', 'CONFIRMED', 'CHECKED_IN', 'CHECKED_OUT', 'CANCELLED'];
 
 export function BookingFilters({ filters, onFiltersChange }: BookingFiltersProps) {
   

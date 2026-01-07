@@ -8,14 +8,11 @@ let guests: Guest[] = [...mockGuests].map(g => {
     const guestBookings = mockBookings.filter(b => b.guestId === g.id);
     const totalSpent = guestBookings.reduce((acc, b) => acc + b.totalAmount, 0);
     const lastVisit = guestBookings.length > 0
-        ? format(new Date(Math.max(...guestBookings.map(b => new Date(b.checkIn).getTime()))), 'yyyy-MM-dd')
+        ? format(new Date(Math.max(...guestBookings.map(b => new Date(b.checkInDate).getTime()))), 'yyyy-MM-dd')
         : undefined;
 
     return {
-        ...g,
-        totalBookings: guestBookings.length,
-        totalSpent,
-        lastVisit,
+        ...g
     }
 });
 
@@ -27,7 +24,7 @@ export async function GET(request: Request) {
 
   if (search) {
     data = data.filter(g => 
-      g.name.toLowerCase().includes(search.toLowerCase()) ||
+      `${g.firstName} ${g.lastName}`.toLowerCase().includes(search.toLowerCase()) ||
       g.email.toLowerCase().includes(search.toLowerCase()) ||
       g.phone.includes(search)
     );
@@ -44,8 +41,8 @@ export async function POST(request: Request) {
     const newGuest: Guest = {
         ...body,
         id: `G${Math.floor(Math.random() * 1000) + 200}`,
-        totalBookings: 0,
-        totalSpent: 0,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
     }
     guests.unshift(newGuest);
     return NextResponse.json(newGuest, { status: 201 });

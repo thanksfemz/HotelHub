@@ -1,4 +1,3 @@
-
 import axios from '@/lib/axios';
 import type { Booking, BookingFilters, CreateBookingRequest, UpdateBookingRequest } from '@/lib/types/booking';
 import type { Room } from '@/lib/types/room';
@@ -16,10 +15,13 @@ export const bookingService = {
         params.guest = filters.guest;
     }
     if (filters?.dateRange?.from) {
-        params.from = filters.dateRange.from.toISOString();
+        params.from = format(filters.dateRange.from, 'yyyy-MM-dd');
     }
     if (filters?.dateRange?.to) {
-        params.to = filters.dateRange.to.toISOString();
+        params.to = format(filters.dateRange.to, 'yyyy-MM-dd');
+    }
+    if (filters?.limit) {
+      params.limit = filters.limit;
     }
 
     const response = await axios.get('/api/bookings', { params });
@@ -29,13 +31,6 @@ export const bookingService = {
   getBooking: async (id: string): Promise<Booking> => {
     const response = await axios.get(`/api/bookings/${id}`);
     return response.data;
-  },
-
-  getRecentBookings: async (limit: number = 5): Promise<Booking[]> => {
-    const allBookings = await bookingService.getBookings({ guest: '', status: 'all', dateRange: {} });
-    return allBookings
-      .sort((a: Booking, b: Booking) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-      .slice(0, limit);
   },
 
   checkAvailability: async (checkIn: Date, checkOut: Date): Promise<Room[]> => {
@@ -48,13 +43,23 @@ export const bookingService = {
     return response.data;
   },
 
-  createBooking: async (data: any): Promise<Booking> => {
+  createBooking: async (data: CreateBookingRequest): Promise<Booking> => {
     const response = await axios.post('/api/bookings', data);
     return response.data;
   },
 
   updateBooking: async (id: string, data: UpdateBookingRequest): Promise<Booking> => {
     const response = await axios.put(`/api/bookings/${id}`, data);
+    return response.data;
+  },
+  
+  checkIn: async (id: string): Promise<Booking> => {
+    const response = await axios.post(`/api/bookings/${id}/check-in`);
+    return response.data;
+  },
+
+  checkOut: async (id: string): Promise<Booking> => {
+    const response = await axios.post(`/api/bookings/${id}/check-out`);
     return response.data;
   },
 };

@@ -17,7 +17,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
     const index = guests.findIndex(g => g.id === params.id);
     if (index !== -1) {
         const body = await request.json();
-        guests[index] = { ...guests[index], ...body };
+        guests[index] = { ...guests[index], ...body, updatedAt: new Date().toISOString() };
         await new Promise(resolve => setTimeout(resolve, 500));
         return NextResponse.json(guests[index]);
     }

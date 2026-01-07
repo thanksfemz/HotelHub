@@ -5,10 +5,10 @@ import { cn } from '@/lib/utils';
 import type { RoomStatus } from '@/lib/types';
 
 const statusColors: Record<RoomStatus, string> = {
-  Available: 'bg-green-500/10 text-green-600 border-green-500/20',
-  Occupied: 'bg-red-500/10 text-red-600 border-red-500/20',
-  Maintenance: 'bg-yellow-500/10 text-yellow-600 border-yellow-500/20',
-  Cleaning: 'bg-blue-500/10 text-blue-600 border-blue-500/20',
+  AVAILABLE: 'bg-green-500/10 text-green-600 border-green-500/20',
+  OCCUPIED: 'bg-red-500/10 text-red-600 border-red-500/20',
+  MAINTENANCE: 'bg-yellow-500/10 text-yellow-600 border-yellow-500/20',
+  CLEANING: 'bg-blue-500/10 text-blue-600 border-blue-500/20',
 };
 
 type RoomStatusBadgeProps = {

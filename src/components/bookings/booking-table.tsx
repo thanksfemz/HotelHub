@@ -12,11 +12,11 @@ import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 
 const statusColors: Record<BookingStatus, string> = {
-  Pending: 'bg-yellow-500/10 text-yellow-600 border-yellow-500/20',
-  Confirmed: 'bg-blue-500/10 text-blue-600 border-blue-500/20',
-  'Checked-in': 'bg-green-500/10 text-green-600 border-green-500/20',
-  'Checked-out': 'bg-gray-500/10 text-gray-600 border-gray-500/20',
-  Cancelled: 'bg-red-500/10 text-red-600 border-red-500/20',
+  PENDING: 'bg-yellow-500/10 text-yellow-600 border-yellow-500/20',
+  CONFIRMED: 'bg-blue-500/10 text-blue-600 border-blue-500/20',
+  CHECKED_IN: 'bg-green-500/10 text-green-600 border-green-500/20',
+  CHECKED_OUT: 'bg-gray-500/10 text-gray-600 border-gray-500/20',
+  CANCELLED: 'bg-red-500/10 text-red-600 border-red-500/20',
 };
 
 type BookingTableProps = {
@@ -63,7 +63,7 @@ export function BookingTable({ bookings }: BookingTableProps) {
               </TableCell>
               <TableCell className="hidden md:table-cell">{booking.roomNumber}</TableCell>
               <TableCell className="hidden lg:table-cell">
-                {format(new Date(booking.checkIn), 'PP')} - {format(new Date(booking.checkOut), 'PP')}
+                {format(new Date(booking.checkInDate), 'PP')} - {format(new Date(booking.checkOutDate), 'PP')}
               </TableCell>
               <TableCell>
                 <Badge variant="outline" className={cn('whitespace-nowrap', statusColors[booking.status])}>

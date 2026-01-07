@@ -44,7 +44,7 @@ export function RoomCard({ room, onEdit, onDelete }: RoomCardProps) {
       <CardContent className="p-4 flex-grow flex flex-col">
         <div className="flex justify-between items-start">
             <div>
-                <h3 className="text-lg font-bold text-primary">{room.type} Room</h3>
+                <h3 className="text-lg font-bold text-primary">{room.roomType} Room</h3>
                 <p className="text-sm text-muted-foreground">Room {room.roomNumber}</p>
             </div>
             <div className="text-right">

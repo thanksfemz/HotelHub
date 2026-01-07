@@ -17,10 +17,11 @@ import { Check, ChevronsUpDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { paymentService } from '@/lib/services/paymentService';
 import { bookingService } from '@/lib/services/bookingService';
-import type { Booking, PaymentMethod } from '@/lib/types';
+import type { Booking, PaymentMethod, CreatePaymentRequest, PaymentStatus } from '@/lib/types';
 import { useState } from 'react';
+import useAuthStore from '@/lib/stores/authStore';
 
-const paymentMethods: PaymentMethod[] = ['Card', 'Cash', 'UPI', 'Bank Transfer'];
+const paymentMethods: PaymentMethod[] = ['Cash', 'Card', 'UPI', 'Bank Transfer'];
 
 const paymentSchema = z.object({
   bookingId: z.string().min(1, 'Booking is required'),
@@ -40,6 +41,7 @@ interface PaymentFormProps {
 export function PaymentForm({ onSuccess, onCancel }: PaymentFormProps) {
   const [bookingSearch, setBookingSearch] = useState('');
   const queryClient = useQueryClient();
+  const { user } = useAuthStore();
 
   const { data: bookings = [], isLoading: isLoadingBookings } = useQuery<Booking[]>({
     queryKey: ['bookings', { guest: bookingSearch }],
@@ -58,7 +60,7 @@ export function PaymentForm({ onSuccess, onCancel }: PaymentFormProps) {
   });
 
   const mutation = useMutation({
-    mutationFn: paymentService.createPayment,
+    mutationFn: (data: CreatePaymentRequest) => paymentService.createPayment(data),
     onSuccess: () => {
       toast.success('Payment created successfully!');
       queryClient.invalidateQueries({ queryKey: ['payments'] });
@@ -71,7 +73,12 @@ export function PaymentForm({ onSuccess, onCancel }: PaymentFormProps) {
   });
 
   const onSubmit = (data: PaymentFormValues) => {
-    mutation.mutate(data);
+    if(!user) {
+        toast.error("You must be logged in to create a payment.");
+        return;
+    }
+    const requestData: CreatePaymentRequest = { ...data, createdBy: user.id };
+    mutation.mutate(requestData);
   };
 
   const selectedBookingId = form.watch('bookingId');

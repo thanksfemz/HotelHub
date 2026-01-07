@@ -1,5 +1,11 @@
 
+
+import type { Guest } from './guest';
+import type { Room } from './room';
+
 export type BookingStatus = 'PENDING' | 'CONFIRMED' | 'CHECKED_IN' | 'CHECKED_OUT' | 'CANCELLED';
+export type PaymentStatus = 'PAID' | 'PENDING' | 'REFUNDED';
+
 
 export interface Booking {
   id: string;
@@ -18,31 +24,32 @@ export interface Booking {
   updatedAt: string;
 
   // Denormalized data for easier display
-  guestName?: string;
-  roomNumber?: string;
-  paymentStatus?: 'Paid' | 'Pending' | 'Refunded';
+  guestName: string;
+  roomNumber: string;
+  paymentStatus?: PaymentStatus;
 }
 
 export interface CreateBookingRequest {
-  guestId: string;
-  roomId: string;
-  checkInDate: string;
-  checkOutDate: string;
-  numberOfGuests: number;
-  totalAmount: number;
-  specialRequests?: string;
-  createdBy: string;
+  guest: Guest;
+  dates: { from: Date, to: Date };
+  room: Room;
+  notes?: string;
+  total: number;
 }
 
-export interface UpdateBookingRequest extends Partial<CreateBookingRequest> {
+export interface UpdateBookingRequest extends Partial<Omit<CreateBookingRequest, 'guest' | 'room' | 'dates'>> {
     status?: BookingStatus;
     actualCheckIn?: string;
     actualCheckOut?: string;
+    guest?: Guest;
+    room?: Room;
+    dates?: { from: Date; to: Date };
 }
 
 
 export interface BookingFilters {
-  status?: 'all' | BookingStatus;
-  dateRange?: { from?: Date; to?: Date };
-  guest?: string;
+  status: 'all' | BookingStatus;
+  dateRange: { from?: Date; to?: Date };
+  guest: string;
+  limit?: number;
 }

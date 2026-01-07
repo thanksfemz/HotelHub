@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Plus, Calendar, List } from 'lucide-react';
@@ -11,7 +11,7 @@ import { BookingTable } from '@/components/bookings/booking-table';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext } from '@/components/ui/pagination';
 import { BookingCalendar } from '@/components/bookings/booking-calendar';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { BookingForm } from '@/components/bookings/booking-form';
 
@@ -27,7 +27,21 @@ export default function BookingsPage() {
   const [view, setView] = useState<'table' | 'calendar'>('table');
   const [isFormOpen, setIsFormOpen] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (searchParams.get('new') === 'true') {
+      setIsFormOpen(true);
+      // Remove the query param from the URL
+      router.replace('/bookings', { scroll: false });
+    }
+    const statusParam = searchParams.get('status');
+    if (statusParam) {
+      setFilters(prev => ({...prev, status: statusParam as any}));
+    }
+  }, [searchParams, router]);
+
 
   const { data: bookings = [], isLoading, error } = useQuery<Booking[]>({
     queryKey: ['bookings', filters],

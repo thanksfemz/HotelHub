@@ -15,22 +15,22 @@ import {
   startOfWeek,
   endOfWeek,
   differenceInDays,
-  addDays
+  addDays,
+  parseISO
 } from 'date-fns';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import type { Booking, BookingStatus } from '@/lib/types';
 import { Skeleton } from '../ui/skeleton';
 
 const statusColors: Record<BookingStatus, string> = {
-  Pending: 'bg-yellow-500/80 border-yellow-700/50 hover:bg-yellow-500 text-white',
-  Confirmed: 'bg-blue-500/80 border-blue-700/50 hover:bg-blue-500 text-white',
-  'Checked-in': 'bg-green-500/80 border-green-700/50 hover:bg-green-500 text-white',
-  'Checked-out': 'bg-gray-500/80 border-gray-700/50 hover:bg-gray-500 text-white',
-  Cancelled: 'bg-red-500/80 border-red-700/50 hover:bg-red-500 text-white',
+  PENDING: 'bg-yellow-500/80 border-yellow-700/50 hover:bg-yellow-500 text-white',
+  CONFIRMED: 'bg-blue-500/80 border-blue-700/50 hover:bg-blue-500 text-white',
+  CHECKED_IN: 'bg-green-500/80 border-green-700/50 hover:bg-green-500 text-white',
+  CHECKED_OUT: 'bg-gray-500/80 border-gray-700/50 hover:bg-gray-500 text-white',
+  CANCELLED: 'bg-red-500/80 border-red-700/50 hover:bg-red-500 text-white',
 };
 
 type BookingCalendarProps = {
@@ -51,9 +51,10 @@ export function BookingCalendar({ bookings, onBookingClick, isLoading }: Booking
   const weekStartsOn = 1; // Monday
 
   const calendarBookings = useMemo(() => {
+    if (!bookings) return [];
     return bookings.map(booking => {
-      const start = new Date(booking.checkIn);
-      const end = new Date(booking.checkOut);
+      const start = parseISO(booking.checkInDate);
+      const end = parseISO(booking.checkOutDate);
       return {
         ...booking,
         start,
@@ -66,7 +67,10 @@ export function BookingCalendar({ bookings, onBookingClick, isLoading }: Booking
 
   const monthStart = startOfMonth(currentDate);
   const monthEnd = endOfMonth(currentDate);
-  const daysInMonth = eachDayOfInterval({ start: startOfWeek(monthStart, { weekStartsOn }), end: endOfWeek(monthEnd, { weekStartsOn }) });
+  const daysInMonth = useMemo(() => eachDayOfInterval({ 
+    start: startOfWeek(monthStart, { weekStartsOn }), 
+    end: endOfWeek(monthEnd, { weekStartsOn }) 
+  }), [monthStart, monthEnd, weekStartsOn]);
   
   const calendarGrid = useMemo(() => {
     return daysInMonth.map(day => {
@@ -114,7 +118,7 @@ export function BookingCalendar({ bookings, onBookingClick, isLoading }: Booking
             </div>
           ))}
 
-          {calendarGrid.map(({ day, bookings }, index) => (
+          {calendarGrid.map(({ day, bookings }) => (
             <div
               key={day.toString()}
               className={cn(

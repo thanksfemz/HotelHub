@@ -1,12 +1,6 @@
-
 import axios from '@/lib/axios';
-import type { Payment, PaymentFilters, CreatePaymentRequest, RefundRequest } from '@/lib/types/payment';
-
-type PaymentSummary = {
-  totalRevenue: number;
-  pendingPayments: number;
-  totalRefunds: number;
-}
+import type { Payment, PaymentFilters, CreatePaymentRequest, RefundRequest, PaymentSummary } from '@/lib/types/payment';
+import { format } from 'date-fns';
 
 export const paymentService = {
   getPayments: async (filters?: Partial<PaymentFilters>): Promise<Payment[]> => {
@@ -19,10 +13,10 @@ export const paymentService = {
       params.method = filters.method;
     }
     if (filters?.dateRange?.from) {
-      params.from = filters.dateRange.from.toISOString();
+      params.from = format(filters.dateRange.from, 'yyyy-MM-dd');
     }
     if (filters?.dateRange?.to) {
-      params.to = filters.dateRange.to.toISOString();
+      params.to = format(filters.dateRange.to, 'yyyy-MM-dd');
     }
 
     const response = await axios.get('/api/payments', { params });

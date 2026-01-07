@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useForm } from 'react-hook-form';
@@ -11,14 +12,15 @@ import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import type { Guest } from '@/lib/types';
+import type { Guest, CreateGuestRequest } from '@/lib/types';
 import { guestService } from '@/lib/services/guestService';
 
 const guestSchema = z.object({
-  name: z.string().min(2, 'Name is required'),
+  firstName: z.string().min(2, 'First name is required'),
+  lastName: z.string().min(2, 'Last name is required'),
   email: z.string().email('Invalid email address'),
   phone: z.string().min(10, 'A valid phone number is required'),
-  idProofType: z.enum(['Passport', 'DriversLicense', 'NationalID']).optional(),
+  idProofType: z.enum(['Passport', 'DriversLicense', 'NationalID', 'Other']).optional(),
   idProofNumber: z.string().optional(),
   address: z.string().optional(),
 });
@@ -31,13 +33,14 @@ interface GuestFormProps {
   onCancel: () => void;
 }
 
-const idProofTypes: Guest['idProofType'][] = ['Passport', 'DriversLicense', 'NationalID'];
+const idProofTypes: Guest['idProofType'][] = ['Passport', 'DriversLicense', 'NationalID', 'Other'];
 
 export function GuestForm({ guest, onSuccess, onCancel }: GuestFormProps) {
   const form = useForm<GuestFormValues>({
     resolver: zodResolver(guestSchema),
     defaultValues: {
-      name: guest?.name || '',
+      firstName: guest?.firstName || '',
+      lastName: guest?.lastName || '',
       email: guest?.email || '',
       phone: guest?.phone || '',
       idProofType: guest?.idProofType,
@@ -47,7 +50,7 @@ export function GuestForm({ guest, onSuccess, onCancel }: GuestFormProps) {
   });
 
   const mutation = useMutation({
-    mutationFn: (data: GuestFormValues) => {
+    mutationFn: (data: CreateGuestRequest) => {
       if (guest) {
         return guestService.updateGuest(guest.id, data);
       }
@@ -69,17 +72,30 @@ export function GuestForm({ guest, onSuccess, onCancel }: GuestFormProps) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 max-h-[70vh] overflow-y-auto p-1 pr-4">
-        <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-            <FormItem>
-                <FormLabel>Full Name</FormLabel>
-                <FormControl><Input placeholder="John Doe" {...field} /></FormControl>
-                <FormMessage />
-            </FormItem>
-            )}
-        />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <FormField
+                control={form.control}
+                name="firstName"
+                render={({ field }) => (
+                <FormItem>
+                    <FormLabel>First Name</FormLabel>
+                    <FormControl><Input placeholder="John" {...field} /></FormControl>
+                    <FormMessage />
+                </FormItem>
+                )}
+            />
+            <FormField
+                control={form.control}
+                name="lastName"
+                render={({ field }) => (
+                <FormItem>
+                    <FormLabel>Last Name</FormLabel>
+                    <FormControl><Input placeholder="Doe" {...field} /></FormControl>
+                    <FormMessage />
+                </FormItem>
+                )}
+            />
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
                 control={form.control}

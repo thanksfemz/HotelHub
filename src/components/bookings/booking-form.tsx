@@ -1,12 +1,13 @@
+
 'use client';
 
-import React, { useState, useMemo, useEffect } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { format, differenceInDays } from 'date-fns';
-import { Calendar as CalendarIcon, Users, BedDouble, ChevronRight, Check, ChevronsUpDown, Plus, User, Search, Phone, Mail } from 'lucide-react';
+import { Calendar as CalendarIcon, Users, BedDouble, ChevronRight, Check, ChevronsUpDown, Plus, User } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { cn } from '@/lib/utils';
@@ -20,7 +21,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Skeleton } from '@/components/ui/skeleton';
 import { bookingService } from '@/lib/services/bookingService';
 import { guestService } from '@/lib/services/guestService';
-import type { Guest, Room } from '@/lib/types';
+import type { Guest, Room, CreateGuestRequest } from '@/lib/types';
 import Image from 'next/image';
 import {
   Command,
@@ -38,15 +39,16 @@ const STEPS = {
   REVIEW: 4,
 };
 
-const guestSchema = z.object({
-  name: z.string().min(2, 'Name is required'),
+const newGuestSchema = z.object({
+  firstName: z.string().min(2, 'First name is required'),
+  lastName: z.string().min(2, 'Last name is required'),
   email: z.string().email('Invalid email'),
   phone: z.string().min(10, 'Invalid phone number'),
 });
 
 const bookingFormSchema = z.object({
   guest: z.custom<Guest>().nullable(),
-  newGuest: guestSchema.optional(),
+  newGuest: newGuestSchema.optional(),
   dates: z.object({
     from: z.date(),
     to: z.date(),
@@ -71,7 +73,7 @@ export function BookingForm({ onSuccess, onCancel }: BookingFormProps) {
     resolver: zodResolver(bookingFormSchema),
     defaultValues: {
       guest: null,
-      newGuest: { name: '', email: '', phone: '' },
+      newGuest: { firstName: '', lastName: '', email: '', phone: '' },
       dates: { from: new Date(), to: new Date(new Date().setDate(new Date().getDate() + 1)) },
       room: null,
       notes: '',
@@ -81,8 +83,8 @@ export function BookingForm({ onSuccess, onCancel }: BookingFormProps) {
   const queryClient = useQueryClient();
 
   const { data: guests = [], isLoading: isLoadingGuests } = useQuery<Guest[]>({
-    queryKey: ['guests', guestSearch],
-    queryFn: () => guestService.getGuests(guestSearch),
+    queryKey: ['guests', { search: guestSearch }],
+    queryFn: () => guestService.getGuests({ search: guestSearch }),
     enabled: !showNewGuestForm,
   });
 
@@ -103,7 +105,7 @@ export function BookingForm({ onSuccess, onCancel }: BookingFormProps) {
   });
 
   const createGuestMutation = useMutation({
-    mutationFn: guestService.createGuest,
+    mutationFn: (data: CreateGuestRequest) => guestService.createGuest(data),
     onSuccess: (newGuest) => {
       queryClient.invalidateQueries({ queryKey: ['guests'] });
       form.setValue('guest', newGuest);
@@ -162,10 +164,17 @@ export function BookingForm({ onSuccess, onCancel }: BookingFormProps) {
             <h3 className="text-lg font-medium mb-4">Select Guest</h3>
             {showNewGuestForm ? (
               <div className="space-y-4">
-                 <FormField control={form.control} name="newGuest.name" render={({ field }) => (
+                 <FormField control={form.control} name="newGuest.firstName" render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Full Name</FormLabel>
-                      <FormControl><Input placeholder="John Doe" {...field} /></FormControl>
+                      <FormLabel>First Name</FormLabel>
+                      <FormControl><Input placeholder="John" {...field} /></FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )} />
+                  <FormField control={form.control} name="newGuest.lastName" render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Last Name</FormLabel>
+                      <FormControl><Input placeholder="Doe" {...field} /></FormControl>
                       <FormMessage />
                     </FormItem>
                   )} />
@@ -191,7 +200,7 @@ export function BookingForm({ onSuccess, onCancel }: BookingFormProps) {
                  <Popover>
                   <PopoverTrigger asChild>
                     <Button variant="outline" role="combobox" className="w-full justify-between">
-                      {selectedGuest ? selectedGuest.name : "Select guest..."}
+                      {selectedGuest ? `${selectedGuest.firstName} ${selectedGuest.lastName}` : "Select guest..."}
                       <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                   </PopoverTrigger>
@@ -204,14 +213,14 @@ export function BookingForm({ onSuccess, onCancel }: BookingFormProps) {
                           {guests.map((guest) => (
                             <CommandItem
                               key={guest.id}
-                              value={guest.name}
+                              value={`${guest.firstName} ${guest.lastName}`}
                               onSelect={() => {
                                 form.setValue('guest', guest);
                                 nextStep();
                               }}
                             >
                               <Check className={cn("mr-2 h-4 w-4", selectedGuest?.id === guest.id ? "opacity-100" : "opacity-0")} />
-                              {guest.name}
+                              {`${guest.firstName} ${guest.lastName}`}
                             </CommandItem>
                           ))}
                         </CommandGroup>
@@ -271,7 +280,7 @@ export function BookingForm({ onSuccess, onCancel }: BookingFormProps) {
                             <div className="relative aspect-video mb-2">
                                 <Image src={room.image.imageUrl} alt={room.image.description} fill className="rounded-md object-cover" />
                             </div>
-                            <h4 className="font-semibold">{room.type} Room</h4>
+                            <h4 className="font-semibold">{room.roomType} Room</h4>
                             <p className="text-sm text-muted-foreground">Room {room.roomNumber}</p>
                             <div className="flex justify-between items-center mt-2">
                                 <div className="flex items-center gap-2 text-sm"><Users className="h-4 w-4" />{room.capacity}</div>
@@ -296,14 +305,14 @@ export function BookingForm({ onSuccess, onCancel }: BookingFormProps) {
                            <div className="flex items-center gap-4">
                                 <div className="bg-muted rounded-full p-3"><User className="h-6 w-6 text-muted-foreground" /></div>
                                 <div>
-                                    <p className="font-semibold">{selectedGuest?.name}</p>
+                                    <p className="font-semibold">{selectedGuest?.firstName} {selectedGuest?.lastName}</p>
                                     <p className="text-sm text-muted-foreground">{selectedGuest?.email}</p>
                                 </div>
                            </div>
                            <div className="flex items-center gap-4">
                                 <div className="bg-muted rounded-full p-3"><BedDouble className="h-6 w-6 text-muted-foreground" /></div>
                                 <div>
-                                    <p className="font-semibold">{selectedRoom?.type} Room ({selectedRoom?.roomNumber})</p>
+                                    <p className="font-semibold">{selectedRoom?.roomType} Room ({selectedRoom?.roomNumber})</p>
                                     <p className="text-sm text-muted-foreground">{format(dates.from, 'PPP')} to {format(dates.to, 'PPP')}</p>
                                 </div>
                            </div>
