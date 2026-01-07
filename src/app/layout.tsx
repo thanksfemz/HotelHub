@@ -1,8 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { Toaster } from '@/components/ui/sonner';
-import { ThemeProvider } from '@/components/theme-provider';
-import AuthProvider from '@/components/auth-provider';
+import { Providers } from './providers';
 
 export const metadata: Metadata = {
   title: 'HotelHub',
@@ -25,17 +23,7 @@ export default function RootLayout({
         />
       </head>
       <body className="font-body antialiased">
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <AuthProvider>
-            {children}
-            <Toaster />
-          </AuthProvider>
-        </ThemeProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

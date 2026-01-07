@@ -5,11 +5,6 @@ import { SidebarProvider } from './sidebar-provider';
 import { SidebarNav, HeaderNav } from './sidebar-nav';
 import { useIsAuthenticated } from '@/lib/stores/authStore';
 import { useRouter } from 'next/navigation';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-
-// Create a client
-const queryClient = new QueryClient();
-
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useIsAuthenticated();
@@ -26,18 +21,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }
 
   return (
-    <QueryClientProvider client={queryClient}>
-        <SidebarProvider>
-        <div className="grid min-h-screen w-full md:grid-cols-[auto_1fr] lg:grid-cols-[auto_1fr]">
-            <SidebarNav />
-            <div className="flex flex-col">
-            <HeaderNav />
-            <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 bg-muted/30">
-                {children}
-            </main>
-            </div>
+    <SidebarProvider>
+      <div className="grid min-h-screen w-full md:grid-cols-[auto_1fr] lg:grid-cols-[auto_1fr]">
+        <SidebarNav />
+        <div className="flex flex-col">
+          <HeaderNav />
+          <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 bg-muted/30">
+            {children}
+          </main>
         </div>
-        </SidebarProvider>
-    </QueryClientProvider>
+      </div>
+    </SidebarProvider>
   );
 }
