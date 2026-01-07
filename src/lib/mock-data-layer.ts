@@ -1,6 +1,6 @@
-import type { Room, RoomStatus, RoomType, Guest, Booking, BookingStatus, PaymentStatus } from '@/lib/types';
+import type { Room, RoomStatus, RoomType, Guest, Booking, BookingStatus, PaymentStatus, Payment, PaymentMethod, PaymentStatusAPI } from '@/lib/types';
 import { getPlaceholderImage } from '@/lib/placeholder-images';
-import { format, addDays, subDays } from 'date-fns';
+import { format, addDays, subDays, differenceInDays } from 'date-fns';
 
 
 const roomTypes: RoomType[] = ['Single', 'Double', 'Suite', 'Deluxe'];
@@ -68,3 +68,17 @@ export const bookings: Booking[] = Array.from({ length: 150 }, (_, i) => {
     totalAmount: room.price * differenceInDays(checkOutDate, checkInDate)
   };
 });
+
+const paymentMethods: PaymentMethod[] = ['Card', 'Cash', 'Bank Transfer', 'UPI'];
+const apiPaymentStatuses: PaymentStatusAPI[] = ['Paid', 'Pending', 'Refunded', 'Failed'];
+
+export const payments: Payment[] = bookings.map((booking, i) => ({
+    id: `PAY${2001 + i}`,
+    bookingId: booking.id,
+    guestName: booking.guestName,
+    amount: booking.totalAmount,
+    method: paymentMethods[i % paymentMethods.length],
+    status: booking.paymentStatus as PaymentStatusAPI, // Align with booking payment status
+    date: format(subDays(new Date(booking.checkIn), 1), 'yyyy-MM-dd'),
+    transactionId: `txn_${Math.random().toString(36).substring(2, 15)}`
+}));

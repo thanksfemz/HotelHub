@@ -86,3 +86,23 @@ export type BookingFilters = {
 export type GuestFilters = {
     search: string;
 };
+
+export type PaymentMethod = 'Cash' | 'Card' | 'UPI' | 'Bank Transfer';
+export type PaymentStatusAPI = 'Paid' | 'Pending' | 'Refunded' | 'Failed';
+
+export type Payment = {
+  id: string;
+  bookingId: string;
+  guestName: string;
+  amount: number;
+  method: PaymentMethod;
+  status: PaymentStatusAPI;
+  date: string;
+  transactionId?: string;
+};
+
+export type PaymentFilters = {
+  method: 'all' | PaymentMethod;
+  status: 'all' | PaymentStatusAPI;
+  dateRange: { from?: Date; to?: Date };
+};
