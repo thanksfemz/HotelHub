@@ -1,6 +1,6 @@
 
 import axios from '@/lib/axios';
-import type { DashboardStats, OccupancyData, RevenueData } from '@/lib/types/report';
+import type { DashboardStats, OccupancyReport, RevenueReport } from '@/lib/types/report';
 
 export const reportService = {
   getDashboardStats: async (): Promise<DashboardStats> => {
@@ -8,13 +8,23 @@ export const reportService = {
     return response.data;
   },
 
-  getOccupancyData: async (days: string): Promise<OccupancyData[]> => {
-    const response = await axios.get(`/api/reports/occupancy?days=${days}`);
+  getOccupancyReport: async (startDate: Date, endDate: Date): Promise<OccupancyReport> => {
+    const response = await axios.get(`/api/reports/occupancy`, {
+      params: {
+        startDate: startDate.toISOString(),
+        endDate: endDate.toISOString(),
+      }
+    });
     return response.data;
   },
 
-  getRevenueData: async (days: string): Promise<RevenueData[]> => {
-    const response = await axios.get(`/api/reports/revenue?days=${days}`);
+  getRevenueReport: async (startDate: Date, endDate: Date): Promise<RevenueReport> => {
+    const response = await axios.get(`/api/reports/revenue`, {
+       params: {
+        startDate: startDate.toISOString(),
+        endDate: endDate.toISOString(),
+      }
+    });
     return response.data;
   },
 };
