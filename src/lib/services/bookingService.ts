@@ -51,5 +51,10 @@ export const bookingService = {
   createBooking: async (data: any) => {
     const response = await axios.post('/api/bookings', data);
     return response.data;
-  }
+  },
+
+  updateBookingStatus: async (id: string, status: string) => {
+    const response = await axios.put(`/api/bookings/${id}`, { status });
+    return response.data;
+  },
 };
