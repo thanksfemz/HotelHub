@@ -1,11 +1,11 @@
-import type { Room, RoomStatus, RoomType, Guest, Booking, BookingStatus, PaymentStatus, Payment, PaymentMethod, PaymentStatusAPI } from '@/lib/types';
+import type { Room, RoomStatus, RoomType, Guest, Booking, BookingStatus, PaymentStatus, Payment, PaymentMethod, PaymentStatusAPI, Staff, StaffRole, StaffStatus, Service, ServiceCategory } from '@/lib/types';
 import { getPlaceholderImage } from '@/lib/placeholder-images';
 import { format, addDays, subDays, differenceInDays } from 'date-fns';
 
 
 const roomTypes: RoomType[] = ['Single', 'Double', 'Suite', 'Deluxe'];
 const roomStatuses: RoomStatus[] = ['Available', 'Occupied', 'Maintenance', 'Cleaning'];
-const allAmenities = ['Wifi', 'TV', 'Air Conditioning', 'Mini-bar', 'Safe', 'Coffee Maker', 'Ocean View', 'Balcony'];
+export const allAmenities = ['Wifi', 'TV', 'Air Conditioning', 'Mini-bar', 'Safe', 'Coffee Maker', 'Ocean View', 'Balcony'];
 
 export const rooms: Room[] = Array.from({ length: 150 }, (_, i) => {
     const type = roomTypes[i % roomTypes.length];
@@ -82,3 +82,43 @@ export const payments: Payment[] = bookings.map((booking, i) => ({
     date: format(subDays(new Date(booking.checkIn), 1), 'yyyy-MM-dd'),
     transactionId: `txn_${Math.random().toString(36).substring(2, 15)}`
 }));
+
+
+const staffRoles: StaffRole[] = ['Admin', 'Manager', 'Receptionist', 'Housekeeping'];
+const staffStatuses: StaffStatus[] = ['Active', 'Inactive'];
+export const staff: Staff[] = Array.from({ length: 20 }, (_, i) => {
+    const firstName = firstNames[i % firstNames.length];
+    const lastName = lastNames[Math.floor(i / firstNames.length) % lastNames.length];
+    return {
+        id: `S${101 + i}`,
+        name: `${firstName} ${lastName}`,
+        email: `${firstName.toLowerCase()}.${lastName.toLowerCase()}@hotelhub.com`,
+        phone: `555-02${i.toString().padStart(2, '0')}`,
+        role: staffRoles[i % staffRoles.length],
+        status: staffStatuses[i % staffStatuses.length],
+        joinedDate: format(subDays(new Date(), Math.floor(Math.random() * 365)), 'yyyy-MM-dd'),
+    }
+});
+
+
+const serviceCategories: ServiceCategory[] = ['Room Service', 'Spa', 'Laundry', 'Restaurant', 'Activities'];
+const serviceNames = {
+    'Room Service': ['In-Room Dining', 'Midnight Snack Pack', 'Champagne & Strawberries'],
+    'Spa': ['Deep Tissue Massage', 'Aromatherapy Facial', 'Couples Package'],
+    'Laundry': ['Express Laundry', 'Dry Cleaning', 'Pressing Service'],
+    'Restaurant': ['Chef\'s Tasting Menu', 'Wine Pairing', 'Private Dining Experience'],
+    'Activities': ['City Tour', 'Cooking Class', 'Yoga Session']
+}
+export const services: Service[] = Array.from({ length: 15 }, (_, i) => {
+    const category = serviceCategories[i % serviceCategories.length];
+    const name = serviceNames[category][i % serviceNames[category].length];
+    return {
+        id: `SRV${101 + i}`,
+        name: name,
+        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+        price: Math.floor(Math.random() * 200) + 20,
+        category: category,
+        available: Math.random() > 0.1,
+        image: getPlaceholderImage(`gallery-${(i % 6) + 1}` as any)
+    };
+});

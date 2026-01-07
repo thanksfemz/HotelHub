@@ -106,3 +106,28 @@ export type PaymentFilters = {
   status: 'all' | PaymentStatusAPI;
   dateRange: { from?: Date; to?: Date };
 };
+
+export type StaffRole = 'Admin' | 'Manager' | 'Receptionist' | 'Housekeeping';
+export type StaffStatus = 'Active' | 'Inactive';
+
+export type Staff = {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  role: StaffRole;
+  status: StaffStatus;
+  joinedDate: string;
+};
+
+export type ServiceCategory = 'Room Service' | 'Spa' | 'Laundry' | 'Restaurant' | 'Activities';
+
+export type Service = {
+    id: string;
+    name: string;
+    description: string;
+    price: number;
+    category: ServiceCategory;
+    available: boolean;
+    image: ImagePlaceholder;
+};
