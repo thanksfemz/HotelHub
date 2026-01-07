@@ -1,5 +1,12 @@
+
 import axios from '@/lib/axios';
-import type { Payment, PaymentFilters } from '../types';
+import type { Payment, PaymentFilters, CreatePaymentRequest, RefundRequest } from '@/lib/types/payment';
+
+type PaymentSummary = {
+  totalRevenue: number;
+  pendingPayments: number;
+  totalRefunds: number;
+}
 
 export const paymentService = {
   getPayments: async (filters?: Partial<PaymentFilters>): Promise<Payment[]> => {
@@ -27,7 +34,7 @@ export const paymentService = {
     return response.data;
   },
 
-  createPayment: async (data: any) => {
+  createPayment: async (data: CreatePaymentRequest): Promise<Payment> => {
     const response = await axios.post('/api/payments', data);
     return response.data;
   },
@@ -37,12 +44,12 @@ export const paymentService = {
     return response.data;
   },
 
-  refundPayment: async (id: string, refundData: { amount: number; reason: string }) => {
+  refundPayment: async (id: string, refundData: RefundRequest): Promise<{ message: string }> => {
     const response = await axios.post(`/api/payments/${id}/refund`, refundData);
     return response.data;
   },
 
-  getSummary: async () => {
+  getSummary: async (): Promise<PaymentSummary> => {
     const response = await axios.get('/api/payments/summary');
     return response.data;
   },

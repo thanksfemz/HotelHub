@@ -1,9 +1,11 @@
+
 import axios from '@/lib/axios';
-import type { Booking, BookingFilters } from '../types';
+import type { Booking, BookingFilters, CreateBookingRequest, UpdateBookingRequest } from '@/lib/types/booking';
+import type { Room } from '@/lib/types/room';
 import { format } from 'date-fns';
 
 export const bookingService = {
-  getBookings: async (filters?: Partial<BookingFilters>) => {
+  getBookings: async (filters?: Partial<BookingFilters>): Promise<Booking[]> => {
     
     let params: Record<string, any> = {};
 
@@ -24,21 +26,19 @@ export const bookingService = {
     return response.data;
   },
   
-  getBooking: async (id: string) => {
+  getBooking: async (id: string): Promise<Booking> => {
     const response = await axios.get(`/api/bookings/${id}`);
     return response.data;
   },
 
-  getRecentBookings: async (limit: number = 5) => {
-    // Corrected this to use totalAmount from the main booking data
+  getRecentBookings: async (limit: number = 5): Promise<Booking[]> => {
     const allBookings = await bookingService.getBookings({ guest: '', status: 'all', dateRange: {} });
     return allBookings
-      .sort((a: Booking, b: Booking) => new Date(b.checkIn).getTime() - new Date(a.checkIn).getTime())
-      .slice(0, limit)
-      .map((b: any) => ({ ...b, amount: b.totalAmount })); // Ensure 'amount' field exists for RecentBookings component
+      .sort((a: Booking, b: Booking) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      .slice(0, limit);
   },
 
-  checkAvailability: async (checkIn: Date, checkOut: Date) => {
+  checkAvailability: async (checkIn: Date, checkOut: Date): Promise<Room[]> => {
     const response = await axios.get('/api/rooms/available', {
         params: {
             checkIn: format(checkIn, 'yyyy-MM-dd'),
@@ -48,13 +48,13 @@ export const bookingService = {
     return response.data;
   },
 
-  createBooking: async (data: any) => {
+  createBooking: async (data: any): Promise<Booking> => {
     const response = await axios.post('/api/bookings', data);
     return response.data;
   },
 
-  updateBookingStatus: async (id: string, status: string) => {
-    const response = await axios.put(`/api/bookings/${id}`, { status });
+  updateBooking: async (id: string, data: UpdateBookingRequest): Promise<Booking> => {
+    const response = await axios.put(`/api/bookings/${id}`, data);
     return response.data;
   },
 };
