@@ -1,12 +1,12 @@
 
 export interface User {
   id: string;
-  name: string;
+  username: string;
   email: string;
-  role: 'Admin' | 'Manager' | 'Receptionist' | 'Housekeeping';
-  phone?: string;
-  avatar?: string;
+  role: 'ADMIN' | 'MANAGER' | 'RECEPTIONIST';
+  isActive: boolean;
   createdAt: string;
+  updatedAt: string;
 }
 
 export interface LoginRequest {
@@ -20,9 +20,7 @@ export interface LoginResponse {
 }
 
 export interface RegisterRequest {
-  name: string;
+  username: string;
   email: string;
   password: string;
-  phone: string;
-  role: 'Admin' | 'Manager' | 'Receptionist';
 }

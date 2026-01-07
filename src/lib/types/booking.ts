@@ -1,48 +1,48 @@
 
-export type BookingStatus = 'Pending' | 'Confirmed' | 'Checked-in' | 'Checked-out' | 'Cancelled';
-export type PaymentStatus = 'Paid' | 'Pending' | 'Partial' | 'Refunded';
-
+export type BookingStatus = 'PENDING' | 'CONFIRMED' | 'CHECKED_IN' | 'CHECKED_OUT' | 'CANCELLED';
 
 export interface Booking {
   id: string;
-  bookingNumber: string;
   guestId: string;
-  guestName: string;
-  guestEmail: string;
-  guestPhone: string;
   roomId: string;
-  roomNumber: string;
-  roomType: string;
-  checkIn: string;
-  checkOut: string;
-  nights: number;
+  checkInDate: string;
+  checkOutDate: string;
+  actualCheckIn?: string;
+  actualCheckOut?: string;
+  numberOfGuests: number;
   status: BookingStatus;
   totalAmount: number;
-  paidAmount: number;
-  paymentStatus: PaymentStatus;
   specialRequests?: string;
+  createdBy: string; // User ID
   createdAt: string;
   updatedAt: string;
+
+  // Denormalized data for easier display
+  guestName?: string;
+  roomNumber?: string;
+  paymentStatus?: 'Paid' | 'Pending' | 'Refunded';
 }
 
 export interface CreateBookingRequest {
   guestId: string;
   roomId: string;
-  checkIn: string;
-  checkOut: string;
+  checkInDate: string;
+  checkOutDate: string;
+  numberOfGuests: number;
+  totalAmount: number;
   specialRequests?: string;
+  createdBy: string;
 }
 
 export interface UpdateBookingRequest extends Partial<CreateBookingRequest> {
-    status?: Booking['status'];
+    status?: BookingStatus;
+    actualCheckIn?: string;
+    actualCheckOut?: string;
 }
 
 
 export interface BookingFilters {
-  status?: 'all' | Booking['status'];
-  paymentStatus?: 'all' | Booking['paymentStatus'];
+  status?: 'all' | BookingStatus;
   dateRange?: { from?: Date; to?: Date };
   guest?: string;
-  roomId?: string;
-  search?: string;
 }

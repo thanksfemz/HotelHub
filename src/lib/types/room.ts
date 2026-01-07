@@ -1,41 +1,42 @@
 
 import type { ImagePlaceholder } from './util';
 
-export type RoomStatus = 'Available' | 'Occupied' | 'Maintenance' | 'Cleaning';
-export type RoomType = 'Single' | 'Double' | 'Suite' | 'Deluxe';
+export type RoomType = 'SINGLE' | 'DOUBLE' | 'SUITE' | 'DELUXE' | 'PRESIDENTIAL';
+export type RoomStatus = 'AVAILABLE' | 'OCCUPIED' | 'MAINTENANCE' | 'CLEANING';
 
 export interface Room {
   id: string;
   roomNumber: string;
-  type: RoomType;
+  roomType: RoomType;
   status: RoomStatus;
   price: number;
   capacity: number;
+  floorNumber: number;
+  description: string;
   amenities: string[];
-  image: ImagePlaceholder;
-  description?: string;
-  floor?: number;
+  imageUrl: string;
   createdAt: string;
   updatedAt: string;
+  image: ImagePlaceholder;
 }
 
 export interface CreateRoomRequest {
   roomNumber: string;
-  type: Room['type'];
-  status: Room['status'];
+  roomType: RoomType;
+  status: RoomStatus;
   price: number;
   capacity: number;
+  floorNumber: number;
+  description: string;
   amenities: string[];
-  image?: string;
-  description?: string;
-  floor?: number;
+  imageUrl: string;
 }
 
 export interface UpdateRoomRequest extends Partial<CreateRoomRequest> {}
 
 export interface RoomFilters {
-  type?: 'all' | Room['type'];
-  status?: 'all' | Room['status'];
+  type?: 'all' | RoomType;
+  status?: 'all' | RoomStatus;
   minPrice?: number | string;
   maxPrice?: number | string;
   capacity?: number;
