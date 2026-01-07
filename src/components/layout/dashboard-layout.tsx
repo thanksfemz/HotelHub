@@ -5,7 +5,6 @@ import { SidebarProvider } from './sidebar-provider';
 import { SidebarNav, HeaderNav } from './sidebar-nav';
 import { useIsAuthenticated } from '@/lib/stores/authStore';
 import { useRouter } from 'next/navigation';
-import { Toaster } from '@/components/ui/sonner';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 // Create a client
@@ -38,7 +37,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </main>
             </div>
         </div>
-        <Toaster />
         </SidebarProvider>
     </QueryClientProvider>
   );
