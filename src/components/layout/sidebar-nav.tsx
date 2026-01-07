@@ -34,6 +34,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { authService } from '@/lib/services/authService';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import { ThemeToggle } from './ThemeToggle';
 
 const navItems = [
   { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard', roles: ['Admin', 'Manager', 'Receptionist'] },
@@ -190,7 +191,10 @@ export function HeaderNav() {
                 <Logo />
             </div>
 
-            <UserMenu />
+            <div className="flex items-center gap-2">
+              <ThemeToggle />
+              <UserMenu />
+            </div>
         </header>
     );
 }
