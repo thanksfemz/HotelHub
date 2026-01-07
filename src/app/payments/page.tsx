@@ -70,13 +70,26 @@ export default function PaymentsPage() {
   
   const renderContent = () => {
     if (isLoading) {
-      return Array.from({ length: 10 }).map((_, i) => <Skeleton key={i} className="h-16 w-full" />);
+      return (
+        <div className="space-y-2">
+            {Array.from({ length: 10 }).map((_, i) => <Skeleton key={i} className="h-12 w-full" />)}
+        </div>
+      );
     }
     if (error) {
       return <div className="text-center py-16 text-destructive">Failed to load payments. Please try again.</div>;
     }
     if (payments.length === 0) {
-      return <div className="text-center py-16 text-muted-foreground">No payments found.</div>;
+        return (
+            <div className="text-center py-16 text-muted-foreground">
+                <h3 className="text-lg font-semibold">No payments found</h3>
+                <p>There are no payments matching your search.</p>
+                <Button onClick={() => setIsFormOpen(true)} className="mt-4">
+                    <Plus className="mr-2 h-4 w-4" />
+                    Add New Payment
+                </Button>
+            </div>
+        );
     }
     return (
         <Table>
@@ -180,7 +193,10 @@ export default function PaymentsPage() {
             payment={refundingPayment}
             isOpen={!!refundingPayment}
             onOpenChange={(isOpen) => !isOpen && setRefundingPayment(null)}
-            onSuccess={() => setRefundingPayment(null)}
+            onSuccess={() => {
+                setRefundingPayment(null);
+                queryClient.invalidateQueries({queryKey: ['payments']});
+            }}
           />
       )}
 

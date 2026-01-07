@@ -80,7 +80,16 @@ export default function BookingsPage() {
     }
     
     if (bookings.length === 0) {
-        return <div className="text-center py-16 text-muted-foreground">No bookings found matching your criteria.</div>
+        return (
+            <div className="text-center py-16 text-muted-foreground">
+                <h3 className="text-lg font-semibold">No bookings found</h3>
+                <p>No bookings match the current filters.</p>
+                <Button onClick={() => setIsFormOpen(true)} className="mt-4">
+                    <Plus className="mr-2 h-4 w-4" />
+                    Create New Booking
+                </Button>
+            </div>
+        )
     }
 
     if (view === 'calendar') {

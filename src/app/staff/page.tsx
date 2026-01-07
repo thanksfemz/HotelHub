@@ -96,7 +96,16 @@ export default function StaffPage() {
             return <div className="text-center py-16 text-destructive">Failed to load staff. Please try again.</div>;
         }
         if (staffList.length === 0) {
-            return <div className="text-center py-16 text-muted-foreground">No staff members found.</div>
+            return (
+                <div className="text-center py-16 text-muted-foreground">
+                    <h3 className="text-lg font-semibold">No staff members found</h3>
+                    <p>There are no staff members matching your search.</p>
+                    <Button onClick={handleAddClick} className="mt-4">
+                        <Plus className="mr-2 h-4 w-4" />
+                        Add New Staff
+                    </Button>
+                </div>
+            );
         }
         return <StaffTable staffList={staffList} onEdit={handleEditClick} onDelete={handleDeleteClick} />;
     }
@@ -108,7 +117,7 @@ export default function StaffPage() {
                     <h1 className="text-3xl font-bold font-headline text-primary">Staff Management</h1>
                     <Button onClick={handleAddClick}><Plus className="mr-2" /> Add Staff</Button>
                 </div>
-                <div className="flex gap-4 mb-4 p-4 bg-muted/50 rounded-lg">
+                <div className="flex gap-4 mb-8 p-4 bg-muted/50 rounded-lg max-w-md">
                     <Select value={filters.role} onValueChange={(v) => setFilters(f => ({...f, role: v as any}))}>
                         <SelectTrigger><SelectValue placeholder="Role" /></SelectTrigger>
                         <SelectContent>{staffRoles.map(r => <SelectItem key={r} value={r}>{r === 'all' ? 'All Roles' : r}</SelectItem>)}</SelectContent>
@@ -131,8 +140,10 @@ export default function StaffPage() {
             
             <AlertDialog open={isDeleteAlertOpen} onOpenChange={setIsDeleteAlertOpen}>
                 <AlertDialogContent>
-                    <AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle></AlertDialogHeader>
-                    <AlertDialogDescription>This will permanently delete {staffToDelete?.name}.</AlertDialogDescription>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                        <AlertDialogDescription>This will permanently delete {staffToDelete?.name}.</AlertDialogDescription>
+                    </AlertDialogHeader>
                     <AlertDialogFooter>
                         <AlertDialogCancel onClick={() => setStaffToDelete(null)}>Cancel</AlertDialogCancel>
                         <AlertDialogAction onClick={confirmDelete} disabled={deleteMutation.isPending}>{deleteMutation.isPending ? 'Deleting...' : 'Delete'}</AlertDialogAction>

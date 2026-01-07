@@ -36,8 +36,8 @@ export default function RoomsPage() {
   const queryClient = useQueryClient();
 
   const { data: rooms = [], isLoading, error } = useQuery<Room[]>({
-    queryKey: ['rooms'],
-    queryFn: () => roomService.getRooms(),
+    queryKey: ['rooms', filters],
+    queryFn: () => roomService.getRooms(filters),
   });
 
   const deleteMutation = useMutation({
@@ -56,15 +56,10 @@ export default function RoomsPage() {
   });
 
   const filteredRooms = useMemo(() => {
-    return rooms.filter(room => {
-      const searchMatch = filters.search ? room.roomNumber.toLowerCase().includes(filters.search.toLowerCase()) : true;
-      const typeMatch = filters.type === 'all' || room.type === filters.type;
-      const statusMatch = filters.status === 'all' || room.status === filters.status;
-      const minPriceMatch = filters.minPrice ? room.price >= Number(filters.minPrice) : true;
-      const maxPriceMatch = filters.maxPrice ? room.price <= Number(filters.maxPrice) : true;
-      return searchMatch && typeMatch && statusMatch && minPriceMatch && maxPriceMatch;
-    });
-  }, [rooms, filters]);
+    // Filtering is now done on the server via queryKey change,
+    // so we just use the data returned from react-query.
+    return rooms;
+  }, [rooms]);
   
   const totalPages = Math.ceil(filteredRooms.length / ITEMS_PER_PAGE);
   const paginatedRooms = filteredRooms.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);

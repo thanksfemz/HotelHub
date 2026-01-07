@@ -97,7 +97,16 @@ export default function GuestsPage() {
         }
 
         if (guests.length === 0) {
-            return <div className="text-center py-16 text-muted-foreground">No guests found.</div>
+            return (
+                <div className="text-center py-16 text-muted-foreground">
+                    <h3 className="text-lg font-semibold">No guests found</h3>
+                    <p>There are no guests matching your search, or no guests have been added yet.</p>
+                    <Button onClick={handleAddClick} className="mt-4">
+                        <Plus className="mr-2 h-4 w-4" />
+                        Add New Guest
+                    </Button>
+                </div>
+            );
         }
 
         return <GuestTable guests={guests} onEdit={handleEditClick} onDelete={handleDeleteClick} onView={handleViewClick} />;

@@ -94,7 +94,16 @@ export default function ServicesPage() {
             return <div className="text-center py-16 text-destructive">Failed to load services. Please try again.</div>;
         }
         if (services.length === 0) {
-            return <div className="text-center py-16 text-muted-foreground">No services found.</div>
+            return (
+                <div className="text-center py-16 text-muted-foreground">
+                    <h3 className="text-lg font-semibold">No services found</h3>
+                    <p>There are no services matching your filters.</p>
+                    <Button onClick={handleAddClick} className="mt-4">
+                        <Plus className="mr-2 h-4 w-4" />
+                        Add New Service
+                    </Button>
+                </div>
+            );
         }
         return (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -112,7 +121,7 @@ export default function ServicesPage() {
                     <h1 className="text-3xl font-bold font-headline text-primary">Hotel Services</h1>
                     <Button onClick={handleAddClick}><Plus className="mr-2" /> Add Service</Button>
                 </div>
-                <div className="mb-4 p-4 bg-muted/50 rounded-lg max-w-sm">
+                <div className="mb-8 p-4 bg-muted/50 rounded-lg max-w-sm">
                     <Select value={filters.category} onValueChange={(v) => setFilters({ category: v as any })}>
                         <SelectTrigger><SelectValue placeholder="Category" /></SelectTrigger>
                         <SelectContent>{serviceCategories.map(c => <SelectItem key={c} value={c}>{c === 'all' ? 'All Categories' : c}</SelectItem>)}</SelectContent>
@@ -130,8 +139,10 @@ export default function ServicesPage() {
             
             <AlertDialog open={isDeleteAlertOpen} onOpenChange={setIsDeleteAlertOpen}>
                 <AlertDialogContent>
-                    <AlertDialogHeader><AlertDialogTitle>Are you sure?</AlertDialogTitle></AlertDialogHeader>
-                    <AlertDialogDescription>This will permanently delete the {serviceToDelete?.name} service.</AlertDialogDescription>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                        <AlertDialogDescription>This action cannot be undone. This will permanently delete the {serviceToDelete?.name} service.</AlertDialogDescription>
+                    </AlertDialogHeader>
                     <AlertDialogFooter>
                         <AlertDialogCancel onClick={() => setServiceToDelete(null)}>Cancel</AlertDialogCancel>
                         <AlertDialogAction onClick={confirmDelete} disabled={deleteMutation.isPending}>{deleteMutation.isPending ? 'Deleting...' : 'Delete'}</AlertDialogAction>
