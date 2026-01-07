@@ -1,4 +1,4 @@
-import type { Room, RoomStatus, RoomType } from '@/lib/types';
+import type { Room, RoomStatus, RoomType, Guest } from '@/lib/types';
 import { getPlaceholderImage } from '@/lib/placeholder-images';
 
 const roomTypes: RoomType[] = ['Single', 'Double', 'Suite', 'Deluxe'];
@@ -20,5 +20,21 @@ export const rooms: Room[] = Array.from({ length: 150 }, (_, i) => {
         capacity,
         amenities: allAmenities.slice(0, Math.floor(Math.random() * allAmenities.length) + 1),
         image: getPlaceholderImage(`room-${(i % 3) + 1}` as 'room-1' | 'room-2' | 'room-3'),
+    };
+});
+
+
+const firstNames = ['John', 'Jane', 'Peter', 'Susan', 'Michael', 'Emily', 'Chris', 'Patricia', 'David', 'Laura'];
+const lastNames = ['Smith', 'Jones', 'Williams', 'Brown', 'Davis', 'Wilson', 'Taylor', 'Miller', 'Anderson', 'Thomas'];
+
+export const guests: Guest[] = Array.from({ length: 50 }, (_, i) => {
+    const firstName = firstNames[i % firstNames.length];
+    const lastName = lastNames[Math.floor(i / firstNames.length) % lastNames.length];
+    return {
+        id: `G${101 + i}`,
+        name: `${firstName} ${lastName}`,
+        email: `${firstName.toLowerCase()}.${lastName.toLowerCase()}@example.com`,
+        phone: `555-01${i.toString().padStart(2, '0')}`,
+        address: `${123 + i} Main St, Anytown, USA`
     };
 });

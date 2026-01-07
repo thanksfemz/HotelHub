@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import React, { useState } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Plus, Calendar, List } from 'lucide-react';
 import { bookingService } from '@/lib/services/bookingService';
@@ -12,6 +12,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext } from '@/components/ui/pagination';
 import { BookingCalendar } from '@/components/bookings/booking-calendar';
 import { useRouter } from 'next/navigation';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { BookingForm } from '@/components/bookings/booking-form';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -23,7 +25,9 @@ export default function BookingsPage() {
   });
   const [currentPage, setCurrentPage] = useState(1);
   const [view, setView] = useState<'table' | 'calendar'>('table');
+  const [isFormOpen, setIsFormOpen] = useState(false);
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const { data: bookings = [], isLoading, error } = useQuery<Booking[]>({
     queryKey: ['bookings', filters],
@@ -53,6 +57,12 @@ export default function BookingsPage() {
   const handleBookingClick = (bookingId: string) => {
     router.push(`/bookings/${bookingId}`);
   }
+
+  const handleFormSuccess = () => {
+    setIsFormOpen(false);
+    queryClient.invalidateQueries({ queryKey: ['bookings'] });
+  };
+
 
   const renderContent = () => {
     if (isLoading) {
@@ -102,6 +112,7 @@ export default function BookingsPage() {
   }
 
   return (
+    <>
     <div className="container mx-auto py-8">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
         <h1 className="text-3xl font-bold font-headline text-primary">Bookings</h1>
@@ -114,9 +125,9 @@ export default function BookingsPage() {
                 <Calendar className="h-5 w-5" />
               </Button>
             </div>
-            <Button>
-            <Plus className="mr-2 h-4 w-4" />
-            New Booking
+            <Button onClick={() => setIsFormOpen(true)}>
+              <Plus className="mr-2 h-4 w-4" />
+              New Booking
             </Button>
         </div>
       </div>
@@ -125,5 +136,14 @@ export default function BookingsPage() {
 
       {renderContent()}
     </div>
+    <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+        <DialogContent className="sm:max-w-4xl">
+          <DialogHeader>
+            <DialogTitle>Create New Booking</DialogTitle>
+          </DialogHeader>
+          <BookingForm onSuccess={handleFormSuccess} onCancel={() => setIsFormOpen(false)} />
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }

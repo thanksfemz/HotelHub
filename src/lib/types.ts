@@ -55,6 +55,15 @@ export type Booking = {
   totalAmount: number;
 };
 
+export type Guest = {
+    id: string;
+    name: string;
+    email: string;
+    phone: string;
+    address: string;
+};
+
+
 export type RoomFilters = {
     search: string;
     type: 'all' | RoomType;

@@ -1,5 +1,6 @@
 import axios from '@/lib/axios';
-import type { BookingFilters } from '../types';
+import type { Booking, BookingFilters } from '../types';
+import { format } from 'date-fns';
 
 export const bookingService = {
   getBookings: async (filters?: Partial<BookingFilters>) => {
@@ -29,7 +30,26 @@ export const bookingService = {
   },
 
   getRecentBookings: async (limit: number = 5) => {
-    const response = await axios.get(`/api/bookings?_limit=${limit}&sort=checkIn&order=desc`);
+    // Corrected this to use totalAmount from the main booking data
+    const allBookings = await bookingService.getBookings({ guest: '', status: 'all', dateRange: {} });
+    return allBookings
+      .sort((a: Booking, b: Booking) => new Date(b.checkIn).getTime() - new Date(a.checkIn).getTime())
+      .slice(0, limit)
+      .map((b: any) => ({ ...b, amount: b.totalAmount })); // Ensure 'amount' field exists for RecentBookings component
+  },
+
+  checkAvailability: async (checkIn: Date, checkOut: Date) => {
+    const response = await axios.get('/api/rooms/available', {
+        params: {
+            checkIn: format(checkIn, 'yyyy-MM-dd'),
+            checkOut: format(checkOut, 'yyyy-MM-dd'),
+        }
+    });
     return response.data;
   },
+
+  createBooking: async (data: any) => {
+    const response = await axios.post('/api/bookings', data);
+    return response.data;
+  }
 };

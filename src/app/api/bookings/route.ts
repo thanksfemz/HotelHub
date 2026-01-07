@@ -1,24 +1,25 @@
 import { NextResponse } from 'next/server';
 import { format, addDays, subDays, parseISO, isWithinInterval } from 'date-fns';
 import type { Booking, BookingStatus, PaymentStatus } from '@/lib/types';
+import { guests as mockGuests } from '@/lib/mock-data-layer';
 
 // In a real application, you would fetch this data from your database.
 // Here, we're generating mock data for demonstration purposes.
 
 const statuses: BookingStatus[] = ['Confirmed', 'Checked-in', 'Checked-out', 'Pending', 'Cancelled'];
 const paymentStatuses: PaymentStatus[] = ['Paid', 'Pending', 'Refunded'];
-const guestNames = ['John Doe', 'Jane Smith', 'Peter Jones', 'Susan Williams', 'Michael Brown', 'Emily Davis', 'Chris Wilson', 'Patricia Taylor'];
 
 
 const mockBookings: Booking[] = Array.from({ length: 150 }, (_, i) => {
+  const guest = mockGuests[i % mockGuests.length];
   const checkInDate = subDays(new Date(), Math.floor(Math.random() * 90) - 30);
   const checkOutDate = addDays(checkInDate, Math.floor(Math.random() * 10) + 1);
   const status = statuses[i % statuses.length];
 
   return {
     id: `BK${1001 + i}`,
-    guestName: guestNames[i % guestNames.length],
-    guestId: `G${101 + (i % guestNames.length)}`,
+    guestName: guest.name,
+    guestId: guest.id,
     roomNumber: `${Math.floor(i / 10) + 101}`,
     roomId: `R${101 + Math.floor(i/10)}`,
     checkIn: format(checkInDate, 'yyyy-MM-dd'),
@@ -83,4 +84,22 @@ export async function GET(request: Request) {
   await new Promise(resolve => setTimeout(resolve, 800));
 
   return NextResponse.json(data);
+}
+
+export async function POST(request: Request) {
+    const body = await request.json();
+    const newBooking: Booking = {
+        id: `BK${Math.floor(Math.random() * 1000) + 2000}`,
+        guestName: body.guest.name,
+        guestId: body.guest.id,
+        roomNumber: body.room.roomNumber,
+        roomId: body.room.id,
+        checkIn: format(new Date(body.dates.from), 'yyyy-MM-dd'),
+        checkOut: format(new Date(body.dates.to), 'yyyy-MM-dd'),
+        status: 'Confirmed', // Default status for new bookings
+        paymentStatus: 'Pending', // Default payment status
+        totalAmount: body.total,
+    };
+    mockBookings.unshift(newBooking);
+    return NextResponse.json(newBooking, { status: 201 });
 }
