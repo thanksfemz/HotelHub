@@ -1,3 +1,4 @@
+
 import axios from '@/lib/axios';
 import type { Booking, BookingFilters, CreateBookingRequest, UpdateBookingRequest } from '@/lib/types/booking';
 import type { Room } from '@/lib/types/room';
@@ -24,17 +25,17 @@ export const bookingService = {
       params.limit = filters.limit;
     }
 
-    const response = await axios.get('/api/bookings', { params });
+    const response = await axios.get('/bookings', { params });
     return response.data;
   },
   
   getBooking: async (id: string): Promise<Booking> => {
-    const response = await axios.get(`/api/bookings/${id}`);
+    const response = await axios.get(`/bookings/${id}`);
     return response.data;
   },
 
   checkAvailability: async (checkIn: Date, checkOut: Date): Promise<Room[]> => {
-    const response = await axios.get('/api/rooms/available', {
+    const response = await axios.get('/rooms/available', {
         params: {
             checkIn: format(checkIn, 'yyyy-MM-dd'),
             checkOut: format(checkOut, 'yyyy-MM-dd'),
@@ -44,22 +45,22 @@ export const bookingService = {
   },
 
   createBooking: async (data: CreateBookingRequest): Promise<Booking> => {
-    const response = await axios.post('/api/bookings', data);
+    const response = await axios.post('/bookings', data);
     return response.data;
   },
 
   updateBooking: async (id: string, data: UpdateBookingRequest): Promise<Booking> => {
-    const response = await axios.put(`/api/bookings/${id}`, data);
+    const response = await axios.put(`/bookings/${id}`, data);
     return response.data;
   },
   
   checkIn: async (id: string): Promise<Booking> => {
-    const response = await axios.post(`/api/bookings/${id}/check-in`);
+    const response = await axios.post(`/bookings/${id}/check-in`);
     return response.data;
   },
 
   checkOut: async (id: string): Promise<Booking> => {
-    const response = await axios.post(`/api/bookings/${id}/check-out`);
+    const response = await axios.post(`/bookings/${id}/check-out`);
     return response.data;
   },
 };
