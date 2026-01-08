@@ -1,3 +1,4 @@
+
 import axios from '@/lib/axios';
 import type { LoginRequest, LoginResponse, RegisterRequest, User, UpdateProfileRequest, ChangePasswordRequest } from '@/lib/types/auth';
 import type { ApiResponse } from '@/lib/types/api';
@@ -22,7 +23,7 @@ export const authService = {
   
   updateProfile: async (data: UpdateProfileRequest): Promise<User> => {
     // Assuming the user ID is implicitly handled by the backend via JWT
-    const response = await axios.put('/users/profile', data);
+    const response = await axios.put('/profile', data);
     return response.data;
   },
 

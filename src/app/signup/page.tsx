@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -19,7 +20,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 
 const signupSchema = z
   .object({
-    name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
+    username: z.string().min(2, { message: 'Username must be at least 2 characters.' }),
     email: z.string().email({ message: 'Invalid email address.' }),
     password: z.string().min(6, { message: 'Password must be at least 6 characters.' }),
     confirmPassword: z.string(),
@@ -41,7 +42,7 @@ export default function SignupPage() {
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
-      name: '',
+      username: '',
       email: '',
       password: '',
       confirmPassword: '',
@@ -51,7 +52,7 @@ export default function SignupPage() {
   const onSubmit = async (data: SignupFormValues) => {
     setIsLoading(true);
     try {
-      await authService.register({ name: data.name, email: data.email, password: data.password });
+      await authService.register({ username: data.username, email: data.email, password: data.password });
       toast.success('Registration successful! Please log in.');
       router.push('/login');
     } catch (error: any) {
@@ -85,12 +86,12 @@ export default function SignupPage() {
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                 <FormField
                   control={form.control}
-                  name="name"
+                  name="username"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Name</FormLabel>
+                      <FormLabel>Username</FormLabel>
                       <FormControl>
-                        <Input placeholder="John Doe" {...field} />
+                        <Input placeholder="john.doe" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
