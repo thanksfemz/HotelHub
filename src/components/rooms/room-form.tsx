@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useForm } from 'react-hook-form';
@@ -26,6 +27,7 @@ const roomSchema = z.object({
   floorNumber: z.coerce.number().int().positive('Floor must be a positive integer'),
   description: z.string().min(1, 'Description is required'),
   amenities: z.array(z.string()).min(1, 'Select at least one amenity'),
+  imageUrl: z.string().url("Please enter a valid image URL").optional(),
 });
 
 type RoomFormValues = z.infer<typeof roomSchema>;
@@ -54,13 +56,14 @@ export function RoomForm({ room, onSuccess, onCancel }: RoomFormProps) {
       floorNumber: room?.floorNumber || 1,
       description: room?.description || '',
       amenities: room?.amenities || [],
+      imageUrl: room?.imageUrl || '',
     },
   });
 
   const mutation = useMutation({
     mutationFn: (data: RoomFormValues) => {
       // The backend should handle assigning a default image if none is provided
-      const requestData = {...data, imageUrl: room?.image.imageUrl || ''};
+      const requestData = {...data, imageUrl: data.imageUrl || 'https://picsum.photos/seed/room/800/600'};
       if (room) {
         return roomService.updateRoom(room.id, requestData);
       }
@@ -180,7 +183,19 @@ export function RoomForm({ room, onSuccess, onCancel }: RoomFormProps) {
                 )}
             />
         </div>
-
+        <FormField
+          control={form.control}
+          name="imageUrl"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Image URL</FormLabel>
+              <FormControl>
+                <Input placeholder="https://example.com/image.jpg" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
          <FormField
             control={form.control}
             name="description"

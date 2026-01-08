@@ -1,3 +1,4 @@
+
 'use client';
 import Image from 'next/image';
 import { useQuery } from '@tanstack/react-query';
@@ -53,11 +54,10 @@ export function RoomShowcase() {
               <CardHeader className="p-0">
                 <div className="aspect-[4/3] overflow-hidden relative">
                   <Image
-                    src={room.image.imageUrl}
-                    alt={room.image.description}
+                    src={room.imageUrl}
+                    alt={room.description}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    data-ai-hint={room.image.imageHint}
                   />
                 </div>
               </CardHeader>

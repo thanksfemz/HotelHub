@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState } from 'react';
@@ -23,7 +24,7 @@ export default function ReportsPage() {
     
     // Role-based access control
     React.useEffect(() => {
-        if (user && !['Admin', 'Manager'].includes(user.role)) {
+        if (user && !['ADMIN', 'MANAGER'].includes(user.role)) {
             toast.error("You don't have permission to view this page.");
             router.push('/dashboard');
         }
@@ -39,7 +40,7 @@ export default function ReportsPage() {
         queryFn: () => reportService.getRevenueReport(dateRange.from, dateRange.to),
     });
 
-    if (user && !['Admin', 'Manager'].includes(user.role)) {
+    if (user && !['ADMIN', 'MANAGER'].includes(user.role)) {
         return <div className="text-center py-16">Access Denied.</div>;
     }
 

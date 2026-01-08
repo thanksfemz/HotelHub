@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState } from 'react';
@@ -41,10 +42,12 @@ export default function ProfilePage() {
     const [isProfileLoading, setIsProfileLoading] = useState(false);
     const [isPasswordLoading, setIsPasswordLoading] = useState(false);
 
+    const displayName = user?.name || user?.username || 'User';
+
     const profileForm = useForm<ProfileFormValues>({
         resolver: zodResolver(profileSchema),
         defaultValues: {
-            name: user?.name || '',
+            name: displayName,
             phone: user?.phone || '',
         },
     });
@@ -104,15 +107,15 @@ export default function ProfilePage() {
                         <CardContent className="p-6 flex flex-col items-center text-center">
                              <div className="relative mb-4">
                                 <Avatar className="h-32 w-32 border-4 border-primary">
-                                    <AvatarImage src={`https://avatar.vercel.sh/${user.email}.png`} alt={user.name} />
-                                    <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+                                    <AvatarImage src={`https://avatar.vercel.sh/${user.email}.png`} alt={displayName} />
+                                    <AvatarFallback>{displayName.charAt(0)}</AvatarFallback>
                                 </Avatar>
                                 <Button size="icon" className="absolute bottom-0 right-0 rounded-full">
                                     {/* Placeholder for upload */}
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
                                 </Button>
                             </div>
-                            <h2 className="text-2xl font-bold">{user.name}</h2>
+                            <h2 className="text-2xl font-bold">{displayName}</h2>
                             <p className="text-muted-foreground">{user.email}</p>
                             <Badge className="mt-2">{user.role}</Badge>
                             <p className="text-sm text-muted-foreground mt-4">

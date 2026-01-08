@@ -9,7 +9,7 @@ import { format } from 'date-fns';
 import { DateRange } from 'react-day-picker';
 
 import { paymentService } from '@/lib/services/paymentService';
-import type { Payment, PaymentFilters as PaymentFiltersType, PaymentMethod, PaymentStatusAPI } from '@/lib/types';
+import type { Payment, PaymentFilters as PaymentFiltersType, PaymentMethod, PaymentStatus } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -27,14 +27,14 @@ import { Invoice } from '@/components/payments/Invoice';
 import { RefundDialog } from '@/components/payments/RefundDialog';
 import { cn } from '@/lib/utils';
 
-const paymentMethods: ('all' | PaymentMethod)[] = ['all', 'Card', 'Cash', 'Bank Transfer', 'UPI'];
-const paymentStatuses: ('all' | PaymentStatusAPI)[] = ['all', 'Paid', 'Pending', 'Refunded', 'Failed'];
+const paymentMethods: ('all' | PaymentMethod)[] = ['all', 'CASH', 'CREDIT_CARD', 'DEBIT_CARD', 'UPI', 'BANK_TRANSFER'];
+const paymentStatuses: ('all' | PaymentStatus)[] = ['all', 'PENDING', 'COMPLETED', 'FAILED', 'REFUNDED'];
 
-const statusColors: Record<PaymentStatusAPI, string> = {
-  Paid: 'bg-green-500/10 text-green-600 border-green-500/20',
-  Pending: 'bg-yellow-500/10 text-yellow-600 border-yellow-500/20',
-  Refunded: 'bg-blue-500/10 text-blue-600 border-blue-500/20',
-  Failed: 'bg-red-500/10 text-red-600 border-red-500/20',
+const statusColors: Record<PaymentStatus, string> = {
+  COMPLETED: 'bg-green-500/10 text-green-600 border-green-500/20',
+  PENDING: 'bg-yellow-500/10 text-yellow-600 border-yellow-500/20',
+  REFUNDED: 'bg-blue-500/10 text-blue-600 border-blue-500/20',
+  FAILED: 'bg-red-500/10 text-red-600 border-red-500/20',
 };
 
 
@@ -112,15 +112,15 @@ export default function PaymentsPage() {
                 <TableCell className="hidden md:table-cell font-mono text-xs">{payment.bookingId}</TableCell>
                 <TableCell>{payment.guestName}</TableCell>
                 <TableCell>${payment.amount.toFixed(2)}</TableCell>
-                <TableCell className="hidden sm:table-cell">{payment.method}</TableCell>
-                <TableCell className="hidden sm:table-cell">{format(new Date(payment.date), 'PP')}</TableCell>
-                <TableCell><Badge variant="outline" className={cn(statusColors[payment.status])}>{payment.status}</Badge></TableCell>
+                <TableCell className="hidden sm:table-cell">{payment.paymentMethod.replace('_', ' ')}</TableCell>
+                <TableCell className="hidden sm:table-cell">{format(new Date(payment.paymentDate), 'PP')}</TableCell>
+                <TableCell><Badge variant="outline" className={cn(statusColors[payment.paymentStatus])}>{payment.paymentStatus}</Badge></TableCell>
                 <TableCell>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild><Button variant="ghost" size="icon"><MoreHorizontal /></Button></DropdownMenuTrigger>
                     <DropdownMenuContent>
                       <DropdownMenuItem onSelect={() => setViewingInvoice(payment)}><FileText className="mr-2"/>View Invoice</DropdownMenuItem>
-                      <DropdownMenuItem onSelect={() => setRefundingPayment(payment)} disabled={payment.status !== 'Paid'}><Undo2 className="mr-2"/>Refund</DropdownMenuItem>
+                      <DropdownMenuItem onSelect={() => setRefundingPayment(payment)} disabled={payment.paymentStatus !== 'COMPLETED'}><Undo2 className="mr-2"/>Refund</DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>
@@ -152,7 +152,7 @@ export default function PaymentsPage() {
             </Select>
             <Select value={filters.method} onValueChange={(v) => handleFilterChange('method', v as any)}>
               <SelectTrigger><SelectValue placeholder="Method" /></SelectTrigger>
-              <SelectContent>{paymentMethods.map(m => <SelectItem key={m} value={m}>{m === 'all' ? 'All Methods' : m}</SelectItem>)}</SelectContent>
+              <SelectContent>{paymentMethods.map(m => <SelectItem key={m} value={m}>{m === 'all' ? 'All Methods' : m.replace('_', ' ')}</SelectItem>)}</SelectContent>
             </Select>
             <Popover>
               <PopoverTrigger asChild>

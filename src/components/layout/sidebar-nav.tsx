@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -35,23 +36,24 @@ import { authService } from '@/lib/services/authService';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { ThemeToggle } from './ThemeToggle';
+import type { UserRole } from '@/lib/types';
 
 const navItems = [
-  { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard', roles: ['Admin', 'Manager', 'Receptionist'] },
-  { href: '/rooms', icon: BedDouble, label: 'Rooms', roles: ['Admin', 'Manager', 'Receptionist'] },
-  { href: '/bookings', icon: CalendarCheck2, label: 'Bookings', roles: ['Admin', 'Manager', 'Receptionist'] },
-  { href: '/guests', icon: Users, label: 'Guests', roles: ['Admin', 'Manager', 'Receptionist'] },
-  { href: '/payments', icon: CreditCard, label: 'Payments', roles: ['Admin', 'Manager'] },
-  { href: '/staff', icon: UserCog, label: 'Staff', roles: ['Admin'] },
-  { href: '/services', icon: Sparkles, label: 'Services', roles: ['Admin', 'Manager'] },
-  { href: '/reports', icon: BarChart3, label: 'Reports', roles: ['Admin', 'Manager'] },
+  { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard', roles: ['ADMIN', 'MANAGER', 'RECEPTIONIST'] as UserRole[] },
+  { href: '/rooms', icon: BedDouble, label: 'Rooms', roles: ['ADMIN', 'MANAGER', 'RECEPTIONIST'] as UserRole[] },
+  { href: '/bookings', icon: CalendarCheck2, label: 'Bookings', roles: ['ADMIN', 'MANAGER', 'RECEPTIONIST'] as UserRole[] },
+  { href: '/guests', icon: Users, label: 'Guests', roles: ['ADMIN', 'MANAGER', 'RECEPTIONIST'] as UserRole[] },
+  { href: '/payments', icon: CreditCard, label: 'Payments', roles: ['ADMIN', 'MANAGER'] as UserRole[] },
+  { href: '/staff', icon: UserCog, label: 'Staff', roles: ['ADMIN'] as UserRole[] },
+  { href: '/services', icon: Sparkles, label: 'Services', roles: ['ADMIN', 'MANAGER'] as UserRole[] },
+  { href: '/reports', icon: BarChart3, label: 'Reports', roles: ['ADMIN', 'MANAGER'] as UserRole[] },
 ];
 
 const settingsNav = {
   href: '/settings',
   icon: Settings,
   label: 'Settings',
-  roles: ['Admin'],
+  roles: ['ADMIN'] as UserRole[],
 };
 
 function NavItem({ href, icon: Icon, label, isCollapsed }: any) {
@@ -87,24 +89,26 @@ function UserMenu() {
         }
     };
 
+    const displayName = user?.name || user?.username || 'User';
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <Button variant="secondary" size="icon" className="rounded-full">
                     <Avatar className="h-8 w-8">
-                        <AvatarImage src={user?.email ? `https://avatar.vercel.sh/${user.email}.png` : undefined} alt={user?.name} />
-                        <AvatarFallback>{user?.name?.[0].toUpperCase()}</AvatarFallback>
+                        <AvatarImage src={user?.email ? `https://avatar.vercel.sh/${user.email}.png` : undefined} alt={displayName} />
+                        <AvatarFallback>{displayName?.[0].toUpperCase()}</AvatarFallback>
                     </Avatar>
                     <span className="sr-only">Toggle user menu</span>
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-                <DropdownMenuLabel>{user?.name}</DropdownMenuLabel>
+                <DropdownMenuLabel>{displayName}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
                     <Link href="/profile"><User className="mr-2 h-4 w-4" />Profile</Link>
                 </DropdownMenuItem>
-                 {user?.role === 'Admin' && (
+                 {user?.role === 'ADMIN' && (
                     <DropdownMenuItem asChild>
                         <Link href="/settings"><Settings className="mr-2 h-4 w-4" />Settings</Link>
                     </DropdownMenuItem>
@@ -121,7 +125,7 @@ function UserMenu() {
 
 function MainNav({ isCollapsed }: { isCollapsed: boolean }) {
   const { user } = useAuthStore();
-  const userRole = user?.role || 'Receptionist';
+  const userRole = user?.role || 'RECEPTIONIST';
 
   const filteredNavItems = navItems.filter(item => item.roles.includes(userRole));
   const showSettings = settingsNav.roles.includes(userRole);

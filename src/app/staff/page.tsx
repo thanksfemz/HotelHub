@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState } from 'react';
@@ -8,7 +9,7 @@ import { useRouter } from 'next/navigation';
 
 import { staffService } from '@/lib/services/staffService';
 import { useAuthStore } from '@/lib/stores/authStore';
-import type { Staff, StaffRole, StaffStatus } from '@/lib/types';
+import type { Staff, StaffStatus, UserRole } from '@/lib/types';
 
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -18,13 +19,13 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { StaffForm } from '@/components/staff/StaffForm';
 import { StaffTable } from '@/components/staff/StaffTable';
 
-const staffRoles: ('all' | StaffRole)[] = ['all', 'Admin', 'Manager', 'Receptionist', 'Housekeeping'];
+const staffRoles: ('all' | UserRole)[] = ['all', 'ADMIN', 'MANAGER', 'RECEPTIONIST'];
 const staffStatuses: ('all' | StaffStatus)[] = ['all', 'Active', 'Inactive'];
 
 export default function StaffPage() {
     const { user } = useAuthStore();
     const router = useRouter();
-    const [filters, setFilters] = useState<{ role: 'all' | StaffRole, status: 'all' | StaffStatus }>({ role: 'all', status: 'all' });
+    const [filters, setFilters] = useState<{ role: 'all' | UserRole, status: 'all' | StaffStatus }>({ role: 'all', status: 'all' });
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [staffToEdit, setStaffToEdit] = useState<Staff | null>(null);
     const [staffToDelete, setStaffToDelete] = useState<Staff | null>(null);
@@ -52,13 +53,13 @@ export default function StaffPage() {
     
     // Role-based access control
     React.useEffect(() => {
-        if (user && user.role !== 'Admin') {
+        if (user && user.role !== 'ADMIN') {
             toast.error("You don't have permission to view this page.");
             router.push('/dashboard');
         }
     }, [user, router]);
     
-    if (user && user.role !== 'Admin') {
+    if (user && user.role !== 'ADMIN') {
         return <div className="text-center py-16">Access Denied.</div>;
     }
 
@@ -142,7 +143,7 @@ export default function StaffPage() {
                 <AlertDialogContent>
                     <AlertDialogHeader>
                         <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                        <AlertDialogDescription>This will permanently delete {staffToDelete?.name}.</AlertDialogDescription>
+                        <AlertDialogDescription>This will permanently delete {staffToDelete?.firstName} {staffToDelete?.lastName}.</AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                         <AlertDialogCancel onClick={() => setStaffToDelete(null)}>Cancel</AlertDialogCancel>

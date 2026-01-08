@@ -1,3 +1,4 @@
+
 'use client';
 
 import Image from 'next/image';
@@ -22,11 +23,10 @@ export function RoomCard({ room, onEdit, onDelete }: RoomCardProps) {
       <CardHeader className="p-0 relative">
         <div className="aspect-[16/9] overflow-hidden">
             <Image
-                src={room.image.imageUrl}
-                alt={room.image.description}
+                src={room.imageUrl}
+                alt={room.description}
                 fill
                 className="object-cover"
-                data-ai-hint={room.image.imageHint}
             />
         </div>
         <div className="absolute top-2 right-2 flex gap-2">

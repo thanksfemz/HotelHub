@@ -1,6 +1,4 @@
 
-import type { ImagePlaceholder } from './util';
-
 export type RoomType = 'SINGLE' | 'DOUBLE' | 'SUITE' | 'DELUXE' | 'PRESIDENTIAL';
 export type RoomStatus = 'AVAILABLE' | 'OCCUPIED' | 'MAINTENANCE' | 'CLEANING';
 
@@ -14,9 +12,9 @@ export interface Room {
   floorNumber: number;
   description: string;
   amenities: string[];
+  imageUrl: string;
   createdAt: string;
   updatedAt: string;
-  image: ImagePlaceholder;
 }
 
 export interface CreateRoomRequest {

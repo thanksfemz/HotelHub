@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useForm } from 'react-hook-form';
@@ -19,8 +20,8 @@ const serviceSchema = z.object({
   name: z.string().min(3, 'Service name is required'),
   description: z.string().min(10, 'Description is required'),
   price: z.coerce.number().positive('Price must be a positive number'),
-  category: z.enum(['Room Service', 'Spa', 'Laundry', 'Restaurant', 'Activities']),
-  available: z.boolean(),
+  category: z.enum(['Room Service', 'Spa', 'Laundry', 'Restaurant', 'Activities', 'Other']),
+  isActive: z.boolean(),
 });
 
 type ServiceFormValues = z.infer<typeof serviceSchema>;
@@ -31,7 +32,7 @@ interface ServiceFormProps {
   onCancel: () => void;
 }
 
-const serviceCategories: ServiceCategory[] = ['Room Service', 'Spa', 'Laundry', 'Restaurant', 'Activities'];
+const serviceCategories: ServiceCategory[] = ['Room Service', 'Spa', 'Laundry', 'Restaurant', 'Activities', 'Other'];
 
 export function ServiceForm({ service, onSuccess, onCancel }: ServiceFormProps) {
   const form = useForm<ServiceFormValues>({
@@ -41,7 +42,7 @@ export function ServiceForm({ service, onSuccess, onCancel }: ServiceFormProps) 
       description: service?.description || '',
       price: service?.price || 0,
       category: service?.category || 'Room Service',
-      available: service?.available ?? true,
+      isActive: service?.isActive ?? true,
     },
   });
 
@@ -123,7 +124,7 @@ export function ServiceForm({ service, onSuccess, onCancel }: ServiceFormProps) 
         </div>
          <FormField
           control={form.control}
-          name="available"
+          name="isActive"
           render={({ field }) => (
             <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
               <div className="space-y-0.5">

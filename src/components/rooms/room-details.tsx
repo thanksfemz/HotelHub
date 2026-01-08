@@ -1,3 +1,4 @@
+
 'use client';
 import Image from 'next/image';
 import type { Room } from '@/lib/types';
@@ -34,11 +35,10 @@ export function RoomDetails({ room }: { room: Room }) {
     <div className="w-full pb-20">
       <div className="relative h-[50vh] bg-background">
         <Image
-          src={room.image.imageUrl}
-          alt={room.image.description}
+          src={room.imageUrl}
+          alt={room.description}
           fill
           className="object-cover"
-          data-ai-hint={room.image.imageHint}
         />
         <div className="absolute inset-0 bg-black/50" />
         <div className="relative z-10 flex h-full flex-col items-center justify-center text-center text-primary-foreground">

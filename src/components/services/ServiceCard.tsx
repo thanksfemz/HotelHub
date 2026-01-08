@@ -1,3 +1,4 @@
+
 'use client';
 
 import Image from 'next/image';
@@ -7,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Pencil, Trash2 } from 'lucide-react';
 import type { Service } from '@/lib/types';
 import { cn } from '@/lib/utils';
+import { getPlaceholderImage } from '@/lib/placeholder-images';
 
 interface ServiceCardProps {
   service: Service;
@@ -15,16 +17,17 @@ interface ServiceCardProps {
 }
 
 export function ServiceCard({ service, onEdit, onDelete }: ServiceCardProps) {
+  const image = service.imageUrl ? { imageUrl: service.imageUrl, description: service.name } : getPlaceholderImage('gallery-5');
+  
   return (
     <Card className="overflow-hidden transition-all duration-300 hover:shadow-lg flex flex-col">
       <CardHeader className="p-0 relative">
         <div className="aspect-[16/9] overflow-hidden">
           <Image
-            src={service.image.imageUrl}
-            alt={service.image.description}
+            src={image.imageUrl}
+            alt={image.description}
             fill
             className="object-cover"
-            data-ai-hint={service.image.imageHint}
           />
         </div>
         <div className="absolute top-2 right-2 flex gap-2">
@@ -37,10 +40,10 @@ export function ServiceCard({ service, onEdit, onDelete }: ServiceCardProps) {
         </div>
         <div className="absolute bottom-2 left-2">
             <Badge className={cn(
-                service.available ? 'bg-green-500/80 text-white' : 'bg-gray-500/80 text-white',
+                service.isActive ? 'bg-green-500/80 text-white' : 'bg-gray-500/80 text-white',
                 'border-none'
             )}>
-                {service.available ? 'Available' : 'Unavailable'}
+                {service.isActive ? 'Available' : 'Unavailable'}
             </Badge>
         </div>
       </CardHeader>

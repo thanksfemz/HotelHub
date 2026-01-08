@@ -31,7 +31,7 @@ export function GuestTable({ guests, onView, onEdit, onDelete }: GuestTableProps
         </TableHeader>
         <TableBody>
           {guests.map((guest) => {
-            const guestName = guest.name || `${guest.firstName} ${guest.lastName}`;
+            const guestName = `${guest.firstName} ${guest.lastName}`;
             return (
             <TableRow
               key={guest.id}

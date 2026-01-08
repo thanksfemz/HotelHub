@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -18,7 +19,6 @@ import Link from 'next/link';
 import { Logo } from '@/components/logo';
 import Image from 'next/image';
 import { getPlaceholderImage } from '@/lib/placeholder-images';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
 
 const loginSchema = z.object({
   email: z.string().email({ message: 'Invalid email address.' }),
@@ -59,99 +59,95 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="relative min-h-screen w-full">
+    <div className="w-full lg:grid lg:min-h-[100vh] lg:grid-cols-2 xl:min-h-[100vh]">
+      <div className="flex items-center justify-center py-12">
+        <div className="mx-auto grid w-[350px] gap-6">
+          <div className="grid gap-2 text-center">
+             <div className="mb-4 flex justify-center">
+                <Logo />
+            </div>
+            <h1 className="text-3xl font-bold font-headline">Welcome Back</h1>
+            <p className="text-balance text-muted-foreground">
+              Enter your email below to login to your account
+            </p>
+          </div>
+           <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input placeholder="name@example.com" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="flex items-center">
+                        <FormLabel>Password</FormLabel>
+                        <Link
+                          href="/forgot-password"
+                          className="ml-auto inline-block text-sm underline"
+                        >
+                          Forgot your password?
+                        </Link>
+                      </div>
+                       <FormControl>
+                          <div className="relative">
+                          <Input
+                              type={showPassword ? 'text' : 'password'}
+                              placeholder="••••••••"
+                              {...field}
+                          />
+                          <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              className="absolute right-1 top-1/2 h-7 w-7 -translate-y-1/2 text-muted-foreground"
+                              onClick={() => setShowPassword(!showPassword)}
+                          >
+                              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                          </Button>
+                          </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button type="submit" className="w-full" disabled={isLoading}>
+                   {isLoading ? 'Signing In...' : 'Login'}
+                </Button>
+                <Button variant="outline" className="w-full">
+                  Login with Google
+                </Button>
+              </form>
+           </Form>
+          <div className="mt-4 text-center text-sm">
+            Don&apos;t have an account?{" "}
+            <Link href="/signup" className="underline">
+              Sign up
+            </Link>
+          </div>
+        </div>
+      </div>
+      <div className="hidden bg-muted lg:block relative">
         <Image
           src={loginImage.imageUrl}
           alt={loginImage.description}
           fill
-          className="object-cover"
+          className="object-cover dark:brightness-[0.2] dark:grayscale"
           data-ai-hint={loginImage.imageHint}
         />
-        <div className="absolute inset-0 bg-black/60" />
-        <div className="relative z-10 flex min-h-screen w-full items-center justify-center p-4">
-            <Card className="w-full max-w-md">
-                <CardHeader className="text-center">
-                    <div className="mb-4 flex justify-center">
-                        <Logo />
-                    </div>
-                    <h1 className="text-3xl font-bold font-headline text-primary">Welcome Back</h1>
-                    <p className="text-muted-foreground">Sign in to manage your luxury experience.</p>
-                </CardHeader>
-                <CardContent>
-                    <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                            <FormField
-                            control={form.control}
-                            name="email"
-                            render={({ field }) => (
-                                <FormItem>
-                                <FormLabel>Email</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="name@example.com" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                                </FormItem>
-                            )}
-                            />
-                            <FormField
-                            control={form.control}
-                            name="password"
-                            render={({ field }) => (
-                                <FormItem>
-                                <FormLabel>Password</FormLabel>
-                                <FormControl>
-                                    <div className="relative">
-                                    <Input
-                                        type={showPassword ? 'text' : 'password'}
-                                        placeholder="••••••••"
-                                        {...field}
-                                    />
-                                    <Button
-                                        type="button"
-                                        variant="ghost"
-                                        size="icon"
-                                        className="absolute right-1 top-1/2 h-7 w-7 -translate-y-1/2 text-muted-foreground"
-                                        onClick={() => setShowPassword(!showPassword)}
-                                    >
-                                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                                    </Button>
-                                    </div>
-                                </FormControl>
-                                <FormMessage />
-                                </FormItem>
-                            )}
-                            />
-                            <div className="flex items-center justify-between">
-                            <FormField
-                                control={form.control}
-                                name="rememberMe"
-                                render={({ field }) => (
-                                <FormItem className="flex items-center space-x-2">
-                                    <FormControl>
-                                    <Checkbox id="rememberMe" checked={field.value} onCheckedChange={field.onChange} />
-                                    </FormControl>
-                                    <Label htmlFor="rememberMe" className="text-sm font-normal">Remember me</Label>
-                                </FormItem>
-                                )}
-                            />
-                            <Link href="#" className="text-sm text-accent hover:underline">
-                                Forgot password?
-                            </Link>
-                            </div>
-                            <Button type="submit" className="w-full" disabled={isLoading}>
-                            {isLoading ? 'Signing In...' : 'Sign In'}
-                            </Button>
-                        </form>
-                    </Form>
-                    <p className="mt-6 text-center text-sm text-muted-foreground">
-                        Don&apos;t have an account?{' '}
-                        <Link href="/signup" className="font-semibold text-accent hover:underline">
-                            Sign up
-                        </Link>
-                    </p>
-                </CardContent>
-            </Card>
-        </div>
+         <div className="absolute inset-0 bg-black/30" />
+      </div>
     </div>
   );
 }

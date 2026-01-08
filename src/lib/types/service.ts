@@ -1,8 +1,5 @@
 
-import type { ImagePlaceholder } from './util';
-
 export type ServiceCategory = 'Room Service' | 'Spa' | 'Laundry' | 'Restaurant' | 'Activities' | 'Other';
-export type ServiceBookingStatus = 'PENDING' | 'COMPLETED' | 'CANCELLED';
 
 export interface Service {
   id: string;
@@ -13,9 +10,10 @@ export interface Service {
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
-  image: ImagePlaceholder;
-  available: boolean; // Keeping for compatibility with existing components
+  imageUrl?: string;
 }
+
+export type ServiceBookingStatus = 'PENDING' | 'COMPLETED' | 'CANCELLED';
 
 export interface ServiceBooking {
     id: string;

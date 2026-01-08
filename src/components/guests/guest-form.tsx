@@ -12,7 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import type { Guest, CreateGuestRequest } from '@/lib/types';
+import type { Guest, CreateGuestRequest, IDProofType } from '@/lib/types';
 import { guestService } from '@/lib/services/guestService';
 
 const guestSchema = z.object({
@@ -23,6 +23,10 @@ const guestSchema = z.object({
   idProofType: z.enum(['Passport', 'DriversLicense', 'NationalID', 'Other']).optional(),
   idProofNumber: z.string().optional(),
   address: z.string().optional(),
+  city: z.string().optional(),
+  state: z.string().optional(),
+  country: z.string().optional(),
+  postalCode: z.string().optional(),
 });
 
 type GuestFormValues = z.infer<typeof guestSchema>;
@@ -33,7 +37,7 @@ interface GuestFormProps {
   onCancel: () => void;
 }
 
-const idProofTypes: Guest['idProofType'][] = ['Passport', 'DriversLicense', 'NationalID', 'Other'];
+const idProofTypes: IDProofType[] = ['Passport', 'DriversLicense', 'NationalID', 'Other'];
 
 export function GuestForm({ guest, onSuccess, onCancel }: GuestFormProps) {
   const form = useForm<GuestFormValues>({
@@ -46,6 +50,10 @@ export function GuestForm({ guest, onSuccess, onCancel }: GuestFormProps) {
       idProofType: guest?.idProofType,
       idProofNumber: guest?.idProofNumber || '',
       address: guest?.address || '',
+      city: guest?.city || '',
+      state: guest?.state || '',
+      country: guest?.country || '',
+      postalCode: guest?.postalCode || '',
     },
   });
 
@@ -161,11 +169,25 @@ export function GuestForm({ guest, onSuccess, onCancel }: GuestFormProps) {
             render={({ field }) => (
             <FormItem>
                 <FormLabel>Address</FormLabel>
-                <FormControl><Textarea placeholder="123 Main St, Anytown, USA" {...field} /></FormControl>
+                <FormControl><Textarea placeholder="123 Main St" {...field} /></FormControl>
                 <FormMessage />
             </FormItem>
             )}
         />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <FormField control={form.control} name="city" render={({ field }) => (
+            <FormItem><FormLabel>City</FormLabel><FormControl><Input placeholder="Anytown" {...field} /></FormControl></FormItem>
+          )} />
+          <FormField control={form.control} name="state" render={({ field }) => (
+            <FormItem><FormLabel>State</FormLabel><FormControl><Input placeholder="CA" {...field} /></FormControl></FormItem>
+          )} />
+          <FormField control={form.control} name="postalCode" render={({ field }) => (
+            <FormItem><FormLabel>Postal Code</FormLabel><FormControl><Input placeholder="12345" {...field} /></FormControl></FormItem>
+          )} />
+        </div>
+        <FormField control={form.control} name="country" render={({ field }) => (
+            <FormItem><FormLabel>Country</FormLabel><FormControl><Input placeholder="USA" {...field} /></FormControl></FormItem>
+          )} />
         
         <div className="flex justify-end gap-2 pt-4">
           <Button type="button" variant="outline" onClick={onCancel}>

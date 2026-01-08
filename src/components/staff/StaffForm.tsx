@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useForm } from 'react-hook-form';
@@ -17,7 +18,7 @@ const staffSchema = z.object({
   name: z.string().min(2, 'Name is required'),
   email: z.string().email('Invalid email address'),
   phone: z.string().min(10, 'A valid phone number is required'),
-  role: z.enum(['Admin', 'Manager', 'Receptionist', 'Housekeeping']),
+  role: z.enum(['ADMIN', 'MANAGER', 'RECEPTIONIST']),
   status: z.enum(['Active', 'Inactive']),
   password: z.string().optional(),
 });
@@ -30,7 +31,7 @@ interface StaffFormProps {
   onCancel: () => void;
 }
 
-const staffRoles: StaffRole[] = ['Admin', 'Manager', 'Receptionist', 'Housekeeping'];
+const staffRoles: Omit<StaffRole, 'Housekeeping'>[] = ['ADMIN', 'MANAGER', 'RECEPTIONIST'];
 const staffStatuses: StaffStatus[] = ['Active', 'Inactive'];
 
 export function StaffForm({ staffMember, onSuccess, onCancel }: StaffFormProps) {
@@ -40,14 +41,14 @@ export function StaffForm({ staffMember, onSuccess, onCancel }: StaffFormProps) 
       name: staffMember?.name || '',
       email: staffMember?.email || '',
       phone: staffMember?.phone || '',
-      role: staffMember?.role || 'Receptionist',
+      role: staffMember?.role || 'RECEPTIONIST',
       status: staffMember?.status || 'Active',
       password: '',
     },
   });
 
   const mutation = useMutation({
-    mutationFn: (data: StaffFormValues) => {
+    mutationFn: (data: any) => { // Use `any` to match service signature
       if (staffMember) {
         return staffService.updateStaff(staffMember.id, data);
       }
@@ -57,13 +58,19 @@ export function StaffForm({ staffMember, onSuccess, onCancel }: StaffFormProps) 
       toast.success(staffMember ? 'Staff member updated' : 'Staff member created');
       onSuccess();
     },
-    onError: (error) => {
+    onError: (error: any) => {
       toast.error(error.message || 'An error occurred');
     },
   });
 
   const onSubmit = (data: StaffFormValues) => {
-    mutation.mutate(data);
+    mutation.mutate({
+        ...data,
+        // The backend expects `name` split into firstName and lastName
+        firstName: data.name.split(' ')[0],
+        lastName: data.name.split(' ').slice(1).join(' ') || data.name.split(' ')[0],
+        position: data.role
+    });
   };
 
   return (

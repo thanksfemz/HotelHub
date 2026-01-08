@@ -1,26 +1,26 @@
 
+import type { UserRole } from './auth';
 
-export type StaffRole = 'Admin' | 'Manager' | 'Receptionist' | 'Housekeeping';
 export type StaffStatus = 'Active' | 'Inactive';
 
 export interface Staff {
   id: string;
-  userId?: string;
+  userId: string;
   firstName: string;
   lastName: string;
-  name: string;
-  email: string;
   phone: string;
   address?: string;
-  role: StaffRole;
-  position: StaffRole;
+  position: UserRole;
   salary?: number;
   hireDate: string;
-  joinedDate: string;
-  status: StaffStatus;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
+  // For convenience, might be populated from user entity
+  name?: string; 
+  email?: string;
+  role?: UserRole;
+  joinedDate?: string; // for compatibility
 }
 
 export interface CreateStaffRequest {
@@ -30,7 +30,7 @@ export interface CreateStaffRequest {
   phone: string;
   password?: string;
   address?: string;
-  role: StaffRole;
+  role: UserRole;
   salary?: number;
   hireDate?: string;
 }
@@ -41,6 +41,6 @@ export interface UpdateStaffRequest extends Partial<CreateStaffRequest> {
 }
 
 export interface StaffFilters {
-    role?: 'all' | StaffRole;
+    role?: 'all' | UserRole;
     status?: 'all' | StaffStatus;
 }

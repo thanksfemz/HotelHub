@@ -1,3 +1,4 @@
+
 'use client';
 
 import React from 'react';
@@ -172,7 +173,7 @@ function RoomTypesSettings({ settings, isLoading }: { settings: RoomTypeSetting[
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {settings.map(type => (
+                        {settings?.map(type => (
                             <TableRow key={type.id}>
                                 <TableCell>{type.name}</TableCell>
                                 <TableCell>${type.basePrice.toFixed(2)}</TableCell>
@@ -200,7 +201,7 @@ export default function SettingsPage() {
     const router = useRouter();
 
     React.useEffect(() => {
-        if (user && user.role !== 'Admin') {
+        if (user && user.role !== 'ADMIN') {
             toast.error("You don't have permission to view this page.");
             router.push('/dashboard');
         }
@@ -211,7 +212,7 @@ export default function SettingsPage() {
         queryFn: settingsService.getSettings,
     });
 
-    if (user && user.role !== 'Admin') {
+    if (user && user.role !== 'ADMIN') {
         return <div className="text-center py-16">Access Denied.</div>;
     }
   

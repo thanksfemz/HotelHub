@@ -1,3 +1,4 @@
+
 'use client';
 
 import Image from 'next/image';
@@ -29,12 +30,11 @@ export function RoomRow({ room, onEdit, onDelete }: RoomRowProps) {
     >
       <div className="relative aspect-square rounded-md overflow-hidden">
         <Image
-          src={room.image.imageUrl}
-          alt={room.image.description}
+          src={room.imageUrl}
+          alt={room.description}
           fill
           className="object-cover"
           sizes="(max-width: 640px) 60px, 80px"
-          data-ai-hint={room.image.imageHint}
         />
       </div>
 

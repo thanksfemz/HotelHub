@@ -17,16 +17,16 @@ import { Check, ChevronsUpDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { paymentService } from '@/lib/services/paymentService';
 import { bookingService } from '@/lib/services/bookingService';
-import type { Booking, PaymentMethod, CreatePaymentRequest, PaymentStatus } from '@/lib/types';
+import type { Booking, PaymentMethod, CreatePaymentRequest } from '@/lib/types';
 import { useState } from 'react';
 import useAuthStore from '@/lib/stores/authStore';
 
-const paymentMethods: PaymentMethod[] = ['Cash', 'Card', 'UPI', 'Bank Transfer'];
+const paymentMethods: PaymentMethod[] = ['CASH', 'CREDIT_CARD', 'DEBIT_CARD', 'UPI', 'BANK_TRANSFER'];
 
 const paymentSchema = z.object({
   bookingId: z.string().min(1, 'Booking is required'),
   amount: z.coerce.number().positive('Amount must be positive'),
-  method: z.enum(paymentMethods),
+  paymentMethod: z.enum(paymentMethods),
   transactionId: z.string().optional(),
   notes: z.string().optional(),
 });
@@ -53,7 +53,7 @@ export function PaymentForm({ onSuccess, onCancel }: PaymentFormProps) {
     defaultValues: {
       bookingId: '',
       amount: 0,
-      method: 'Card',
+      paymentMethod: 'CREDIT_CARD',
       transactionId: '',
       notes: '',
     },
@@ -82,7 +82,7 @@ export function PaymentForm({ onSuccess, onCancel }: PaymentFormProps) {
   };
 
   const selectedBookingId = form.watch('bookingId');
-  const selectedMethod = form.watch('method');
+  const selectedMethod = form.watch('paymentMethod');
   const selectedBooking = bookings.find(b => b.id === selectedBookingId);
 
   return (
@@ -102,7 +102,7 @@ export function PaymentForm({ onSuccess, onCancel }: PaymentFormProps) {
                       role="combobox"
                       className={cn("w-full justify-between", !field.value && "text-muted-foreground")}
                     >
-                      {field.value
+                      {field.value && selectedBooking
                         ? `${selectedBooking?.guestName} - ${selectedBooking?.id}`
                         : "Select booking"}
                       <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -160,7 +160,7 @@ export function PaymentForm({ onSuccess, onCancel }: PaymentFormProps) {
           />
           <FormField
             control={form.control}
-            name="method"
+            name="paymentMethod"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Payment Method</FormLabel>
@@ -172,7 +172,7 @@ export function PaymentForm({ onSuccess, onCancel }: PaymentFormProps) {
                   </FormControl>
                   <SelectContent>
                     {paymentMethods.map(method => (
-                      <SelectItem key={method} value={method}>{method}</SelectItem>
+                      <SelectItem key={method} value={method}>{method.replace(/_/g, ' ')}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -182,7 +182,7 @@ export function PaymentForm({ onSuccess, onCancel }: PaymentFormProps) {
           />
         </div>
 
-        {selectedMethod !== 'Cash' && (
+        {selectedMethod !== 'CASH' && (
            <FormField
             control={form.control}
             name="transactionId"

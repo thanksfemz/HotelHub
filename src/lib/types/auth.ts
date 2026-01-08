@@ -1,12 +1,16 @@
 
+export type UserRole = 'ADMIN' | 'MANAGER' | 'RECEPTIONIST';
+
 export interface User {
   id: string;
-  name: string;
+  username: string;
   email: string;
-  role: 'Admin' | 'Manager' | 'Receptionist';
-  phone?: string;
-  avatar?: string;
+  role: UserRole;
+  isActive: boolean;
   createdAt: string;
+  updatedAt: string;
+  name?: string; // For display purposes, might come from staff/guest profile
+  phone?: string;
 }
 
 export interface LoginRequest {

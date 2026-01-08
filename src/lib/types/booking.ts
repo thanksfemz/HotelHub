@@ -1,11 +1,5 @@
 
-
-import type { Guest } from './guest';
-import type { Room } from './room';
-
 export type BookingStatus = 'PENDING' | 'CONFIRMED' | 'CHECKED_IN' | 'CHECKED_OUT' | 'CANCELLED';
-export type PaymentStatus = 'PAID' | 'PENDING' | 'REFUNDED';
-
 
 export interface Booking {
   id: string;
@@ -13,8 +7,8 @@ export interface Booking {
   roomId: string;
   checkInDate: string;
   checkOutDate: string;
-  actualCheckIn?: string;
-  actualCheckOut?: string;
+  actualCheckIn?: string | null;
+  actualCheckOut?: string | null;
   numberOfGuests: number;
   status: BookingStatus;
   totalAmount: number;
@@ -23,29 +17,27 @@ export interface Booking {
   createdAt: string;
   updatedAt: string;
 
-  // Denormalized data for easier display
-  guestName: string;
-  roomNumber: string;
-  paymentStatus?: PaymentStatus;
+  // Denormalized data for easier display - can be added by frontend if needed
+  guestName?: string;
+  roomNumber?: string;
+  paymentStatus?: 'PAID' | 'PENDING' | 'REFUNDED';
 }
 
 export interface CreateBookingRequest {
-  guest: Guest;
-  dates: { from: Date, to: Date };
-  room: Room;
-  notes?: string;
-  total: number;
+  guestId: string;
+  roomId: string;
+  checkInDate: string;
+  checkOutDate: string;
+  numberOfGuests: number;
+  totalAmount: number;
+  specialRequests?: string;
 }
 
-export interface UpdateBookingRequest extends Partial<Omit<CreateBookingRequest, 'guest' | 'room' | 'dates'>> {
-    status?: BookingStatus;
-    actualCheckIn?: string;
-    actualCheckOut?: string;
-    guest?: Guest;
-    room?: Room;
-    dates?: { from: Date; to: Date };
+export interface UpdateBookingRequest extends Partial<Omit<CreateBookingRequest, 'guestId' | 'roomId'>> {
+  status?: BookingStatus;
+  actualCheckIn?: string;
+  actualCheckOut?: string;
 }
-
 
 export interface BookingFilters {
   status: 'all' | BookingStatus;

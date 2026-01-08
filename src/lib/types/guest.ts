@@ -1,5 +1,4 @@
 
-
 export type IDProofType = 'Passport' | 'DriversLicense' | 'NationalID' | 'Other';
 
 export interface Guest {
@@ -17,7 +16,6 @@ export interface Guest {
   postalCode?: string;
   createdAt: string;
   updatedAt: string;
-  name?: string; // Kept for compatibility with some components expecting 'name'
 }
 
 export interface CreateGuestRequest {
@@ -28,6 +26,10 @@ export interface CreateGuestRequest {
   idProofType?: IDProofType;
   idProofNumber?: string;
   address?: string;
+  city?: string;
+  state?: string;
+  country?: string;
+  postalCode?: string;
 }
 
 export type UpdateGuestRequest = Partial<CreateGuestRequest>;

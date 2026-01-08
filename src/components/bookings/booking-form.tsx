@@ -6,8 +6,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { format, differenceInDays } from 'date-fns';
-import { Calendar as CalendarIcon, Users, BedDouble, ChevronRight, Check, ChevronsUpDown, Plus, User } from 'lucide-react';
+import { format, differenceInDays, formatISO } from 'date-fns';
+import { Calendar as CalendarIcon, Users, BedDouble, ChevronRight, Check, ChevronsUpDown, Plus, User as UserIcon } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { cn } from '@/lib/utils';
@@ -21,7 +21,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Skeleton } from '@/components/ui/skeleton';
 import { bookingService } from '@/lib/services/bookingService';
 import { guestService } from '@/lib/services/guestService';
-import type { Guest, Room, CreateGuestRequest } from '@/lib/types';
+import type { Guest, Room, CreateGuestRequest, CreateBookingRequest } from '@/lib/types';
 import Image from 'next/image';
 import {
   Command,
@@ -55,6 +55,7 @@ const bookingFormSchema = z.object({
   }).refine(data => data.to > data.from, { message: 'Check-out date must be after check-in date.', path: ['to']}),
   room: z.custom<Room>().nullable(),
   notes: z.string().optional(),
+  numberOfGuests: z.coerce.number().min(1),
 });
 
 type BookingFormValues = z.infer<typeof bookingFormSchema>;
@@ -77,6 +78,7 @@ export function BookingForm({ onSuccess, onCancel }: BookingFormProps) {
       dates: { from: new Date(), to: new Date(new Date().setDate(new Date().getDate() + 1)) },
       room: null,
       notes: '',
+      numberOfGuests: 1,
     },
   });
 
@@ -96,7 +98,7 @@ export function BookingForm({ onSuccess, onCancel }: BookingFormProps) {
   });
 
   const createBookingMutation = useMutation({
-    mutationFn: bookingService.createBooking,
+    mutationFn: (data: CreateBookingRequest) => bookingService.createBooking(data),
     onSuccess: () => {
       toast.success('Booking created successfully!');
       onSuccess();
@@ -130,7 +132,11 @@ export function BookingForm({ onSuccess, onCancel }: BookingFormProps) {
         return;
     }
     if (step === STEPS.GUEST && showNewGuestForm) {
-        form.handleSubmit(onGuestSubmit)();
+        form.trigger(["newGuest.firstName", "newGuest.lastName", "newGuest.email", "newGuest.phone"]).then(isValid => {
+            if (isValid) {
+                createGuestMutation.mutate(form.getValues('newGuest') as CreateGuestRequest);
+            }
+        });
         return;
     }
     if (step === STEPS.DATES) {
@@ -140,19 +146,22 @@ export function BookingForm({ onSuccess, onCancel }: BookingFormProps) {
   }
   const prevStep = () => setStep(s => Math.max(s - 1, 1));
   
-  const onGuestSubmit = (data: BookingFormValues) => {
-    if (data.newGuest) {
-      createGuestMutation.mutate(data.newGuest);
-    }
-  };
 
   const onSubmit = () => {
+    const values = form.getValues();
+    if (!values.guest || !values.room) {
+      toast.error("Guest and Room must be selected.");
+      return;
+    }
+    
     createBookingMutation.mutate({
-      guest: form.getValues('guest'),
-      dates: form.getValues('dates'),
-      room: form.getValues('room'),
-      notes: form.getValues('notes'),
-      total,
+      guestId: values.guest.id,
+      roomId: values.room.id,
+      checkInDate: formatISO(values.dates.from),
+      checkOutDate: formatISO(values.dates.to),
+      numberOfGuests: values.numberOfGuests,
+      totalAmount: total,
+      specialRequests: values.notes,
     });
   };
 
@@ -243,22 +252,37 @@ export function BookingForm({ onSuccess, onCancel }: BookingFormProps) {
       case STEPS.DATES:
         return (
             <div>
-                <h3 className="text-lg font-medium mb-4">Select Dates</h3>
-                <FormField
+                <h3 className="text-lg font-medium mb-4">Select Dates & Guests</h3>
+                <div className="flex flex-col items-center space-y-4">
+                  <FormField
+                      control={form.control}
+                      name="dates"
+                      render={({ field }) => (
+                          <FormItem className="flex flex-col items-center">
+                          <Calendar
+                              mode="range"
+                              selected={{ from: field.value.from, to: field.value.to }}
+                              onSelect={(range) => range && field.onChange({ from: range.from, to: range.to })}
+                              numberOfMonths={2}
+                          />
+                          <FormMessage />
+                          </FormItem>
+                      )}
+                  />
+                  <FormField
                     control={form.control}
-                    name="dates"
+                    name="numberOfGuests"
                     render={({ field }) => (
-                        <FormItem className="flex flex-col items-center">
-                        <Calendar
-                            mode="range"
-                            selected={{ from: field.value.from, to: field.value.to }}
-                            onSelect={(range) => range && field.onChange({ from: range.from, to: range.to })}
-                            numberOfMonths={2}
-                        />
-                        <FormMessage />
+                        <FormItem className="w-full max-w-sm">
+                            <FormLabel>Number of Guests</FormLabel>
+                            <FormControl>
+                              <Input type="number" min="1" {...field} />
+                            </FormControl>
+                            <FormMessage />
                         </FormItem>
                     )}
-                />
+                  />
+                </div>
             </div>
         );
       case STEPS.ROOM:
@@ -278,7 +302,7 @@ export function BookingForm({ onSuccess, onCancel }: BookingFormProps) {
                         className={cn("cursor-pointer hover:border-primary", selectedRoom?.id === room.id && 'border-primary ring-2 ring-primary')}>
                         <CardContent className="p-4">
                             <div className="relative aspect-video mb-2">
-                                <Image src={room.image.imageUrl} alt={room.image.description} fill className="rounded-md object-cover" />
+                                <Image src={room.imageUrl} alt={room.description} fill className="rounded-md object-cover" />
                             </div>
                             <h4 className="font-semibold">{room.roomType} Room</h4>
                             <p className="text-sm text-muted-foreground">Room {room.roomNumber}</p>
@@ -303,7 +327,7 @@ export function BookingForm({ onSuccess, onCancel }: BookingFormProps) {
                     <Card>
                         <CardContent className="p-4 space-y-4">
                            <div className="flex items-center gap-4">
-                                <div className="bg-muted rounded-full p-3"><User className="h-6 w-6 text-muted-foreground" /></div>
+                                <div className="bg-muted rounded-full p-3"><UserIcon className="h-6 w-6 text-muted-foreground" /></div>
                                 <div>
                                     <p className="font-semibold">{selectedGuest?.firstName} {selectedGuest?.lastName}</p>
                                     <p className="text-sm text-muted-foreground">{selectedGuest?.email}</p>

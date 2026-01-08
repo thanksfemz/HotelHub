@@ -1,15 +1,11 @@
 
+import type { PaymentMethod } from './payment';
+
 export interface DashboardStats {
   totalRooms: number;
   occupiedRooms: number;
   availableRooms: number;
-  maintenanceRooms: number;
   todayRevenue: number;
-  monthRevenue: number;
-  checkInsToday: number;
-  checkOutsToday: number;
-  pendingBookings: number;
-  totalGuests: number;
 }
 
 export interface OccupancyData {
@@ -38,8 +34,7 @@ export interface RevenueReport {
   totalRevenue: number;
   averageRevenue: number;
   paymentMethodBreakdown: {
-    method: string;
+    method: PaymentMethod;
     amount: number;
-    percentage: number;
   }[];
 }
