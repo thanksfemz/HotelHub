@@ -1,3 +1,4 @@
+
 'use client';
 import React, { useEffect, useState } from 'react';
 import { Building, Bed, BedDouble, DollarSign, RefreshCw, AlertCircle } from 'lucide-react';
@@ -39,7 +40,7 @@ export function StatsCards() {
   return (
     <div>
         <div className="flex items-center justify-between mb-4">
-            <h1 className="text-3xl font-bold">Welcome, {user?.name}!</h1>
+            <h1 className="text-3xl font-bold">Welcome, {user?.name || user?.username}!</h1>
             <Button onClick={fetchStats} disabled={statsLoading} size="sm" variant="outline">
                 <RefreshCw className={`mr-2 h-4 w-4 ${statsLoading ? 'animate-spin' : ''}`} />
                 {statsLoading ? 'Refreshing...' : 'Refresh'}

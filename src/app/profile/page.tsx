@@ -37,17 +37,18 @@ type ProfileFormValues = z.infer<typeof profileSchema>;
 type PasswordFormValues = z.infer<typeof passwordSchema>;
 
 export default function ProfilePage() {
-    const { user, clearAuth } = useAuthStore();
+    const { user, setAuth, clearAuth } = useAuthStore();
     const router = useRouter();
     const [isProfileLoading, setIsProfileLoading] = useState(false);
     const [isPasswordLoading, setIsPasswordLoading] = useState(false);
+    const token = useAuthStore(s => s.token)
 
     const displayName = user?.name || user?.username || 'User';
 
     const profileForm = useForm<ProfileFormValues>({
         resolver: zodResolver(profileSchema),
         defaultValues: {
-            name: displayName,
+            name: user?.name || '',
             phone: user?.phone || '',
         },
     });
@@ -64,8 +65,10 @@ export default function ProfilePage() {
     const onProfileSubmit = async (data: ProfileFormValues) => {
         setIsProfileLoading(true);
         try {
-            // In a real app, you'd get the updated user back and update the store
-            await authService.updateProfile(data);
+            const updatedUser = await authService.updateProfile(data);
+             if (token) {
+              setAuth(updatedUser, token);
+            }
             toast.success('Profile updated successfully!');
         } catch (error: any) {
             toast.error(error.message || 'Failed to update profile.');
@@ -116,6 +119,7 @@ export default function ProfilePage() {
                                 </Button>
                             </div>
                             <h2 className="text-2xl font-bold">{displayName}</h2>
+                            <p className="text-muted-foreground">@{user.username}</p>
                             <p className="text-muted-foreground">{user.email}</p>
                             <Badge className="mt-2">{user.role}</Badge>
                             <p className="text-sm text-muted-foreground mt-4">
@@ -135,7 +139,7 @@ export default function ProfilePage() {
                             <Form {...profileForm}>
                                 <form onSubmit={profileForm.handleSubmit(onProfileSubmit)} className="space-y-4">
                                      <FormField control={profileForm.control} name="name" render={({ field }) => (
-                                        <FormItem><FormLabel>Full Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                                        <FormItem><FormLabel>Display Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
                                     )} />
                                      <FormField control={profileForm.control} name="phone" render={({ field }) => (
                                         <FormItem><FormLabel>Phone Number</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
