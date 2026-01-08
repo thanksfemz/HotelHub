@@ -12,14 +12,15 @@ import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { staffService } from '@/lib/services/staffService';
-import type { Staff, StaffRole, StaffStatus } from '@/lib/types';
+import type { Staff, UserRole, StaffStatus, CreateStaffRequest, UpdateStaffRequest } from '@/lib/types';
 
 const staffSchema = z.object({
-  name: z.string().min(2, 'Name is required'),
+  firstName: z.string().min(1, 'First name is required'),
+  lastName: z.string().min(1, 'Last name is required'),
   email: z.string().email('Invalid email address'),
   phone: z.string().min(10, 'A valid phone number is required'),
-  role: z.enum(['ADMIN', 'MANAGER', 'RECEPTIONIST']),
-  status: z.enum(['Active', 'Inactive']),
+  position: z.enum(['ADMIN', 'MANAGER', 'RECEPTIONIST']),
+  isActive: z.boolean(),
   password: z.string().optional(),
 });
 
@@ -31,28 +32,28 @@ interface StaffFormProps {
   onCancel: () => void;
 }
 
-const staffRoles: Omit<StaffRole, 'Housekeeping'>[] = ['ADMIN', 'MANAGER', 'RECEPTIONIST'];
-const staffStatuses: StaffStatus[] = ['Active', 'Inactive'];
+const staffRoles: UserRole[] = ['ADMIN', 'MANAGER', 'RECEPTIONIST'];
 
 export function StaffForm({ staffMember, onSuccess, onCancel }: StaffFormProps) {
   const form = useForm<StaffFormValues>({
     resolver: zodResolver(staffSchema),
     defaultValues: {
-      name: staffMember?.name || '',
+      firstName: staffMember?.firstName || '',
+      lastName: staffMember?.lastName || '',
       email: staffMember?.email || '',
       phone: staffMember?.phone || '',
-      role: staffMember?.role || 'RECEPTIONIST',
-      status: staffMember?.status || 'Active',
+      position: staffMember?.position || 'RECEPTIONIST',
+      isActive: staffMember?.isActive ?? true,
       password: '',
     },
   });
 
   const mutation = useMutation({
-    mutationFn: (data: any) => { // Use `any` to match service signature
+    mutationFn: (data: CreateStaffRequest | UpdateStaffRequest) => {
       if (staffMember) {
-        return staffService.updateStaff(staffMember.id, data);
+        return staffService.updateStaff(staffMember.id, data as UpdateStaffRequest);
       }
-      return staffService.createStaff(data);
+      return staffService.createStaff(data as CreateStaffRequest);
     },
     onSuccess: () => {
       toast.success(staffMember ? 'Staff member updated' : 'Staff member created');
@@ -64,29 +65,36 @@ export function StaffForm({ staffMember, onSuccess, onCancel }: StaffFormProps) 
   });
 
   const onSubmit = (data: StaffFormValues) => {
-    mutation.mutate({
-        ...data,
-        // The backend expects `name` split into firstName and lastName
-        firstName: data.name.split(' ')[0],
-        lastName: data.name.split(' ').slice(1).join(' ') || data.name.split(' ')[0],
-        position: data.role
-    });
+    mutation.mutate(data);
   };
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 max-h-[70vh] overflow-y-auto p-1 pr-4">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Full Name</FormLabel>
-              <FormControl><Input placeholder="John Doe" {...field} /></FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <FormField
+            control={form.control}
+            name="firstName"
+            render={({ field }) => (
+                <FormItem>
+                <FormLabel>First Name</FormLabel>
+                <FormControl><Input placeholder="John" {...field} /></FormControl>
+                <FormMessage />
+                </FormItem>
+            )}
+            />
+            <FormField
+            control={form.control}
+            name="lastName"
+            render={({ field }) => (
+                <FormItem>
+                <FormLabel>Last Name</FormLabel>
+                <FormControl><Input placeholder="Doe" {...field} /></FormControl>
+                <FormMessage />
+                </FormItem>
+            )}
+            />
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField
             control={form.control}
@@ -114,7 +122,7 @@ export function StaffForm({ staffMember, onSuccess, onCancel }: StaffFormProps) 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
               control={form.control}
-              name="role"
+              name="position"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Role</FormLabel>
@@ -131,22 +139,23 @@ export function StaffForm({ staffMember, onSuccess, onCancel }: StaffFormProps) 
               )}
             />
             <FormField
-              control={form.control}
-              name="status"
-              render={({ field }) => (
+            control={form.control}
+            name="isActive"
+            render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Status</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormLabel>Status</FormLabel>
+                <Select onValueChange={(value) => field.onChange(value === 'true')} defaultValue={String(field.value)}>
                     <FormControl>
-                      <SelectTrigger><SelectValue placeholder="Select status" /></SelectTrigger>
+                    <SelectTrigger><SelectValue placeholder="Select status" /></SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {staffStatuses.map(status => <SelectItem key={status} value={status}>{status}</SelectItem>)}
+                        <SelectItem value="true">Active</SelectItem>
+                        <SelectItem value="false">Inactive</SelectItem>
                     </SelectContent>
-                  </Select>
-                  <FormMessage />
+                </Select>
+                <FormMessage />
                 </FormItem>
-              )}
+            )}
             />
         </div>
         {!staffMember && (
@@ -172,3 +181,5 @@ export function StaffForm({ staffMember, onSuccess, onCancel }: StaffFormProps) 
     </Form>
   );
 }
+
+    

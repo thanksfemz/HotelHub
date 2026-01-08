@@ -1,3 +1,4 @@
+
 'use client';
 
 import React from 'react';
@@ -9,7 +10,7 @@ import { bookingService } from '@/lib/services/bookingService';
 import { guestService } from '@/lib/services/guestService';
 import { Separator } from '@/components/ui/separator';
 import { Logo } from '@/components/logo';
-import { format, differenceInDays } from 'date-fns';
+import { format, differenceInDays, parseISO } from 'date-fns';
 import type { Payment, Booking, Guest } from '@/lib/types';
 import { Printer } from 'lucide-react';
 
@@ -44,7 +45,7 @@ export function Invoice({ payment }: InvoiceProps) {
       )
   }
   
-  const nights = differenceInDays(new Date(booking.checkOutDate), new Date(booking.checkInDate));
+  const nights = differenceInDays(parseISO(booking.checkOutDate), parseISO(booking.checkInDate));
   const subTotal = booking.totalAmount;
   const taxRate = 0.1; // 10%
   const tax = subTotal * taxRate;
@@ -64,7 +65,7 @@ export function Invoice({ payment }: InvoiceProps) {
             <div className="text-right">
                 <h2 className="text-3xl font-bold font-headline text-primary">Invoice</h2>
                 <p className="text-muted-foreground">#{payment.id}</p>
-                <p className="text-sm text-muted-foreground">Date: {format(new Date(payment.date), 'PPP')}</p>
+                <p className="text-sm text-muted-foreground">Date: {format(parseISO(payment.paymentDate), 'PP')}</p>
             </div>
         </header>
 
@@ -72,7 +73,7 @@ export function Invoice({ payment }: InvoiceProps) {
             <div>
                 <h3 className="font-semibold text-muted-foreground mb-2">Bill To</h3>
                 <p className="font-bold">{guest.firstName} {guest.lastName}</p>
-                <p>{guest.address}</p>
+                {guest.address && <p>{guest.address}</p>}
                 <p>{guest.email}</p>
                 <p>{guest.phone}</p>
             </div>
@@ -80,8 +81,8 @@ export function Invoice({ payment }: InvoiceProps) {
                 <h3 className="font-semibold text-muted-foreground mb-2">Booking Details</h3>
                 <p><span className="font-semibold">Booking ID:</span> {booking.id}</p>
                 <p><span className="font-semibold">Room:</span> {booking.roomNumber}</p>
-                <p><span className="font-semibold">Check-in:</span> {format(new Date(booking.checkInDate), 'PPP')}</p>
-                <p><span className="font-semibold">Check-out:</span> {format(new Date(booking.checkOutDate), 'PPP')}</p>
+                <p><span className="font-semibold">Check-in:</span> {format(parseISO(booking.checkInDate), 'PP')}</p>
+                <p><span className="font-semibold">Check-out:</span> {format(parseISO(booking.checkOutDate), 'PP')}</p>
              </div>
         </section>
 
@@ -147,3 +148,5 @@ export function Invoice({ payment }: InvoiceProps) {
     </DialogContent>
   );
 }
+
+    

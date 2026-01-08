@@ -3,7 +3,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { bookingService } from '@/lib/services/bookingService';
 import type { Booking, BookingStatus } from '@/lib/types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
@@ -73,8 +73,8 @@ export function RecentBookings() {
                         <div className="text-xs text-muted-foreground">{booking.id}</div>
                     </TableCell>
                     <TableCell className="hidden sm:table-cell">{booking.roomNumber}</TableCell>
-                    <TableCell className="hidden md:table-cell">{format(new Date(booking.checkInDate), 'PP')}</TableCell>
-                    <TableCell className="hidden md:table-cell">{format(new Date(booking.checkOutDate), 'PP')}</TableCell>
+                    <TableCell className="hidden md:table-cell">{format(parseISO(booking.checkInDate), 'PP')}</TableCell>
+                    <TableCell className="hidden md:table-cell">{format(parseISO(booking.checkOutDate), 'PP')}</TableCell>
                     <TableCell>
                         <Badge variant="outline" className={cn('whitespace-nowrap', statusColors[booking.status])}>
                         {booking.status}
@@ -96,3 +96,5 @@ export function RecentBookings() {
     </Card>
   );
 }
+
+    

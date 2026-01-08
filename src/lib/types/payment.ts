@@ -11,8 +11,9 @@ export interface Payment {
   transactionId?: string;
   paymentDate: string;
   notes?: string;
-  createdBy: string;
+  createdBy: string; // User ID
   createdAt: string;
+
   // Denormalized data
   guestName?: string; 
 }
@@ -43,3 +44,5 @@ export interface PaymentSummary {
     pendingPayments: number;
     totalRefunds: number;
 }
+
+    

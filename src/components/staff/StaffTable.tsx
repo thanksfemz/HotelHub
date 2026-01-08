@@ -1,7 +1,7 @@
 
 'use client';
 
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -54,10 +54,11 @@ export function StaffTable({ staffList, onEdit, onDelete }: StaffTableProps) {
                 </div>
               </TableCell>
               <TableCell className="hidden md:table-cell">
+                 <div className="text-sm">{staff.email}</div>
                 <div className="text-xs text-muted-foreground">{staff.phone}</div>
               </TableCell>
               <TableCell><Badge variant="outline" className={cn(roleColors[staff.position])}>{staff.position}</Badge></TableCell>
-              <TableCell className="hidden lg:table-cell">{format(new Date(staff.hireDate), 'PP')}</TableCell>
+              <TableCell className="hidden lg:table-cell">{format(parseISO(staff.hireDate), 'PP')}</TableCell>
               <TableCell>
                 <Badge variant="outline" className={cn(staff.isActive ? 'bg-green-500/10 text-green-600' : 'bg-gray-500/10 text-gray-600')}>
                     {staff.isActive ? 'Active' : 'Inactive'}
@@ -84,3 +85,5 @@ export function StaffTable({ staffList, onEdit, onDelete }: StaffTableProps) {
     </div>
   );
 }
+
+    

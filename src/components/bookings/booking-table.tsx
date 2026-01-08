@@ -1,7 +1,8 @@
+
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -63,7 +64,7 @@ export function BookingTable({ bookings }: BookingTableProps) {
               </TableCell>
               <TableCell className="hidden md:table-cell">{booking.roomNumber}</TableCell>
               <TableCell className="hidden lg:table-cell">
-                {format(new Date(booking.checkInDate), 'PP')} - {format(new Date(booking.checkOutDate), 'PP')}
+                {format(parseISO(booking.checkInDate), 'PP')} - {format(parseISO(booking.checkOutDate), 'PP')}
               </TableCell>
               <TableCell>
                 <Badge variant="outline" className={cn('whitespace-nowrap', statusColors[booking.status])}>
@@ -107,3 +108,5 @@ export function BookingTable({ bookings }: BookingTableProps) {
     </div>
   );
 }
+
+    

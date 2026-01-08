@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
@@ -9,7 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, User, BedDouble, Calendar, DollarSign, CreditCard } from 'lucide-react';
 import Link from 'next/link';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { cn } from '@/lib/utils';
 import type { BookingStatus } from '@/lib/types';
 import { useRouter } from 'next/navigation';
@@ -70,7 +71,7 @@ export default function BookingDetailsPage({ params }: { params: { id: string } 
                         <div>
                             <CardTitle className="text-2xl">Booking ID: {booking.id}</CardTitle>
                             <CardDescription>
-                                Booked on {format(new Date(booking.createdAt), 'PP')}
+                                Booked on {format(parseISO(booking.createdAt), 'PP')}
                             </CardDescription>
                         </div>
                         <Badge className={cn('text-base', statusColors[booking.status])} variant="outline">{booking.status}</Badge>
@@ -87,11 +88,11 @@ export default function BookingDetailsPage({ params }: { params: { id: string } 
                             Room {booking.roomNumber}
                         </Link>
                    } />
-                   <DetailItem icon={Calendar} label="Check-in" value={format(new Date(booking.checkInDate), 'EEEE, MMMM d, yyyy')} />
-                   <DetailItem icon={Calendar} label="Check-out" value={format(new Date(booking.checkOutDate), 'EEEE, MMMM d, yyyy')} />
+                   <DetailItem icon={Calendar} label="Check-in" value={format(parseISO(booking.checkInDate), 'EEEE, MMMM d, yyyy')} />
+                   <DetailItem icon={Calendar} label="Check-out" value={format(parseISO(booking.checkOutDate), 'EEEE, MMMM d, yyyy')} />
                    <DetailItem icon={DollarSign} label="Total Amount" value={`$${booking.totalAmount.toFixed(2)}`} />
                    <DetailItem icon={CreditCard} label="Payment Status" value={
-                    <Badge variant={booking.paymentStatus === 'PAID' ? 'default' : 'secondary'} className={booking.paymentStatus === 'PAID' ? 'bg-green-600' : ''}>
+                    <Badge variant={booking.paymentStatus === 'COMPLETED' ? 'default' : 'secondary'} className={booking.paymentStatus === 'COMPLETED' ? 'bg-green-600' : ''}>
                         {booking.paymentStatus}
                     </Badge>
                    } />
@@ -167,3 +168,5 @@ function BookingDetailsSkeleton() {
         </div>
     );
 }
+
+    

@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState } from 'react';
@@ -7,7 +8,7 @@ import { Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 import { serviceService } from '@/lib/services/serviceService';
-import { useAuthStore } from '@/lib/stores/authStore';
+import useAuthStore from '@/lib/stores/authStore';
 import type { Service, ServiceCategory } from '@/lib/types';
 
 import { Button } from '@/components/ui/button';
@@ -18,7 +19,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { ServiceForm } from '@/components/services/ServiceForm';
 import { ServiceCard } from '@/components/services/ServiceCard';
 
-const serviceCategories: ('all' | ServiceCategory)[] = ['all', 'Room Service', 'Spa', 'Laundry', 'Restaurant', 'Activities'];
+const serviceCategories: ('all' | ServiceCategory)[] = ['all', 'Room Service', 'Spa', 'Laundry', 'Restaurant', 'Activities', 'Other'];
 
 export default function ServicesPage() {
     const { user } = useAuthStore();
@@ -50,13 +51,13 @@ export default function ServicesPage() {
     });
 
     React.useEffect(() => {
-        if (user && !['Admin', 'Manager'].includes(user.role)) {
+        if (user && !['ADMIN', 'MANAGER'].includes(user.role)) {
             toast.error("You don't have permission to view this page.");
             router.push('/dashboard');
         }
     }, [user, router]);
     
-    if (user && !['Admin', 'Manager'].includes(user.role)) {
+    if (user && !['ADMIN', 'MANAGER'].includes(user.role)) {
         return <div className="text-center py-16">Access Denied.</div>;
     }
 
@@ -152,3 +153,5 @@ export default function ServicesPage() {
         </>
     );
 }
+
+    

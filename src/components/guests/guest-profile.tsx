@@ -1,3 +1,4 @@
+
 'use client';
 
 import React from 'react';
@@ -9,7 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Mail, Phone, MapPin, Briefcase, DollarSign, Calendar, Info } from 'lucide-react';
 import { BookingTable } from '../bookings/booking-table';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 
 interface GuestProfileProps {
     guestId: string;
@@ -61,7 +62,7 @@ export function GuestProfile({ guestId }: GuestProfileProps) {
                         <div className="mt-2 space-y-1 text-sm text-muted-foreground">
                             <p className="flex items-center gap-2"><Mail className="h-4 w-4"/> {guest.email}</p>
                             <p className="flex items-center gap-2"><Phone className="h-4 w-4"/> {guest.phone}</p>
-                            <p className="flex items-center gap-2"><MapPin className="h-4 w-4"/> {guest.address}</p>
+                            {guest.address && <p className="flex items-center gap-2"><MapPin className="h-4 w-4"/> {guest.address}</p>}
                             {guest.idProofNumber && <p className="flex items-center gap-2"><Info className="h-4 w-4"/> {guest.idProofType}: {guest.idProofNumber}</p>}
                         </div>
                     </div>
@@ -112,3 +113,5 @@ function GuestProfileSkeleton() {
         </div>
     )
 }
+
+    

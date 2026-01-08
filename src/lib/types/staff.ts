@@ -1,8 +1,6 @@
 
 import type { UserRole } from './auth';
 
-export type StaffStatus = 'Active' | 'Inactive';
-
 export interface Staff {
   id: string;
   userId: string;
@@ -16,31 +14,30 @@ export interface Staff {
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
+  
   // For convenience, might be populated from user entity
-  name?: string; 
   email?: string;
-  role?: UserRole;
-  joinedDate?: string; // for compatibility
 }
 
 export interface CreateStaffRequest {
-  userId?: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   phone: string;
+  position: UserRole;
   password?: string;
   address?: string;
-  role: UserRole;
   salary?: number;
   hireDate?: string;
 }
 
-export interface UpdateStaffRequest extends Partial<CreateStaffRequest> {
+export interface UpdateStaffRequest extends Partial<Omit<CreateStaffRequest, 'password' | 'email'>> {
     isActive?: boolean;
-    status?: StaffStatus;
 }
 
 export interface StaffFilters {
     role?: 'all' | UserRole;
-    status?: 'all' | StaffStatus;
+    status?: 'all' | 'Active' | 'Inactive';
 }
+
+    

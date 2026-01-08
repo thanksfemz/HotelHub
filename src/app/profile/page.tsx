@@ -5,10 +5,10 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useAuthStore } from '@/lib/stores/authStore';
+import useAuthStore from '@/lib/stores/authStore';
 import { authService } from '@/lib/services/authService';
 import { toast } from 'sonner';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
@@ -119,7 +119,7 @@ export default function ProfilePage() {
                             <p className="text-muted-foreground">{user.email}</p>
                             <Badge className="mt-2">{user.role}</Badge>
                             <p className="text-sm text-muted-foreground mt-4">
-                                Member since {format(new Date(user.createdAt), 'MMMM yyyy')}
+                                Member since {format(parseISO(user.createdAt), 'MMMM yyyy')}
                             </p>
                         </CardContent>
                     </Card>
@@ -183,3 +183,5 @@ export default function ProfilePage() {
         </div>
     );
 }
+
+    

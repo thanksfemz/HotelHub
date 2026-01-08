@@ -42,7 +42,7 @@ export function RefundDialog({ payment, isOpen, onOpenChange, onSuccess }: Refun
   });
   
   const refundMutation = useMutation({
-    mutationFn: (data: RefundFormValues) => {
+    mutationFn: (data: { amount: number; reason: string }) => {
         if (!payment) throw new Error("No payment selected for refund");
         return paymentService.refundPayment(payment.id, data);
     },
@@ -145,3 +145,5 @@ export function RefundDialog({ payment, isOpen, onOpenChange, onSuccess }: Refun
     </>
   );
 }
+
+    
