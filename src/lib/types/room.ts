@@ -14,7 +14,6 @@ export interface Room {
   floorNumber: number;
   description: string;
   amenities: string[];
-  imageUrl: string;
   createdAt: string;
   updatedAt: string;
   image: ImagePlaceholder;
@@ -41,4 +40,5 @@ export interface RoomFilters {
   maxPrice?: number | string;
   capacity?: number;
   search?: string;
+  limit?: number;
 }

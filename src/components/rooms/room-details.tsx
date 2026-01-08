@@ -1,6 +1,6 @@
+'use client';
 import Image from 'next/image';
 import type { Room } from '@/lib/types';
-import { amenities } from '@/lib/placeholder-data';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Check } from 'lucide-react';
@@ -22,7 +22,7 @@ const bookingFormSchema = z.object({
 export function RoomDetails({ room }: { room: Room }) {
   function onSubmit(values: z.infer<typeof bookingFormSchema>) {
     toast.info('Booking request sent!', {
-      description: `You are booking the ${room.name} from ${format(values.checkIn, 'PPP')} to ${format(
+      description: `You are booking the ${room.roomType} room from ${format(values.checkIn, 'PPP')} to ${format(
         values.checkOut,
         'PPP'
       )} for ${values.guests} guest(s).`,
@@ -42,7 +42,7 @@ export function RoomDetails({ room }: { room: Room }) {
         />
         <div className="absolute inset-0 bg-black/50" />
         <div className="relative z-10 flex h-full flex-col items-center justify-center text-center text-primary-foreground">
-          <h1 className="font-headline text-5xl font-bold">{room.name}</h1>
+          <h1 className="font-headline text-5xl font-bold">{room.roomType} Room</h1>
         </div>
       </div>
 
@@ -57,28 +57,12 @@ export function RoomDetails({ room }: { room: Room }) {
               <h3 className="mt-10 font-headline text-2xl font-bold text-primary">Amenities</h3>
               <div className="mt-3 h-1 w-16 bg-accent" />
               <ul className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                {amenities.slice(0, 4).map((amenity) => (
-                  <li key={amenity.name} className="flex items-center gap-3">
-                    <amenity.icon className="h-5 w-5 text-accent" />
-                    <span className="text-muted-foreground">{amenity.name}</span>
+                {room.amenities.map((amenity) => (
+                  <li key={amenity} className="flex items-center gap-3">
+                    <Check className="h-5 w-5 text-accent" />
+                    <span className="text-muted-foreground">{amenity}</span>
                   </li>
                 ))}
-                 <li className="flex items-center gap-3">
-                    <Check className="h-5 w-5 text-accent" />
-                    <span className="text-muted-foreground">King-sized Bed</span>
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <Check className="h-5 w-5 text-accent" />
-                    <span className="text-muted-foreground">Rainfall Shower</span>
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <Check className="h-5 w-5 text-accent" />
-                    <span className="text-muted-foreground">Minibar</span>
-                  </li>
-                   <li className="flex items-center gap-3">
-                    <Check className="h-5 w-5 text-accent" />
-                    <span className="text-muted-foreground">Smart TV</span>
-                  </li>
               </ul>
             </div>
 

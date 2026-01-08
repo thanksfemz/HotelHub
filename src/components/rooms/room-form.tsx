@@ -3,7 +3,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
@@ -14,7 +14,8 @@ import { Textarea } from '@/components/ui/textarea';
 import type { Room, RoomStatus, RoomType } from '@/lib/types';
 import { roomService } from '@/lib/services/roomService';
 import { Checkbox } from '../ui/checkbox';
-import { allAmenities } from '@/lib/mock-data-layer';
+import { serviceService } from '@/lib/services/serviceService';
+import { Skeleton } from '../ui/skeleton';
 
 const roomSchema = z.object({
   roomNumber: z.string().min(1, 'Room number is required'),
@@ -38,6 +39,9 @@ interface RoomFormProps {
 const roomTypes: RoomType[] = ['SINGLE', 'DOUBLE', 'SUITE', 'DELUXE', 'PRESIDENTIAL'];
 const roomStatuses: RoomStatus[] = ['AVAILABLE', 'OCCUPIED', 'MAINTENANCE', 'CLEANING'];
 
+// In a real app, this would likely be fetched from an endpoint
+const allAmenities = ['Wifi', 'TV', 'Air Conditioning', 'Mini-bar', 'Safe', 'Coffee Maker', 'Ocean View', 'Balcony'];
+
 export function RoomForm({ room, onSuccess, onCancel }: RoomFormProps) {
   const form = useForm<RoomFormValues>({
     resolver: zodResolver(roomSchema),
@@ -55,7 +59,8 @@ export function RoomForm({ room, onSuccess, onCancel }: RoomFormProps) {
 
   const mutation = useMutation({
     mutationFn: (data: RoomFormValues) => {
-      const requestData = {...data, imageUrl: room?.imageUrl || ''};
+      // The backend should handle assigning a default image if none is provided
+      const requestData = {...data, imageUrl: room?.image.imageUrl || ''};
       if (room) {
         return roomService.updateRoom(room.id, requestData);
       }

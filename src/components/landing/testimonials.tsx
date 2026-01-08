@@ -3,11 +3,41 @@
 
 import Image from 'next/image';
 import { Star } from 'lucide-react';
-import { testimonials } from '@/lib/placeholder-data';
 import { Card, CardContent } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import { getPlaceholderImage } from '@/lib/placeholder-images';
+import type { Testimonial } from '@/lib/types';
+
 
 export function Testimonials() {
+
+    // This data is typically static or comes from a CMS.
+    // For this app, we'll keep it within the component.
+    const testimonials: Testimonial[] = [
+    {
+        quote: 'An unforgettable experience of pure luxury and impeccable service. From the moment we arrived, we felt like royalty. We will definitely be back!',
+        name: 'Emily & James Turner',
+        location: 'London, UK',
+        rating: 5,
+        image: getPlaceholderImage('testimonial-1'),
+    },
+    {
+        quote: 'The attention to detail at HotelHub is simply unparalleled. Every aspect of our stay was perfect. The best hotel I have ever stayed in.',
+        name: 'Alexandra Chen',
+        location: 'Singapore',
+        rating: 5,
+        image: getPlaceholderImage('testimonial-2'),
+    },
+    {
+        quote: 'As a frequent business traveler, I can confidently say HotelHub sets the standard for luxury and comfort. The staff was incredibly attentive.',
+        name: 'David Rodriguez',
+        location: 'New York, USA',
+        rating: 5,
+        image: getPlaceholderImage('testimonial-3'),
+    },
+    ];
+
+
   return (
     <section id="testimonials" className="w-full py-20 md:py-32 bg-background">
       <div className="container mx-auto px-4 md:px-6">
